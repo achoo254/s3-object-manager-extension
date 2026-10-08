@@ -34,6 +34,14 @@ report() {
   fi
 }
 
+# `git grep -n` hits, ignoring matches that only occur inside package integrity hashes
+# (`sha512-<base64>` in lockfiles): random base64 regularly spells short words.
+content_hits() {
+  git grep "$@" -I -i -n -E -e "$regex" -- . \
+    | sed -E 's/sha(1|256|384|512)-[A-Za-z0-9+\/]+=*//g' \
+    | grep -i -E -e "$regex" || true
+}
+
 # Prints `path:line` of each hit from `git grep -n` output ($1), never the matched text, so
 # public CI logs show where to look. A path that itself matches is replaced by a placeholder.
 locations() {
@@ -46,13 +54,13 @@ locations() {
 
 case "$mode" in
   files)
-    hits="$(git grep -I -i -n -E -e "$regex" -- . || true)"
+    hits="$(content_hits)"
     report "tracked files" "$hits"
     if [[ "$verbose" != "1" ]]; then locations "$hits"; fi
     report "file paths" "$(git ls-files | grep -i -E -e "$regex" || true)"
     ;;
   staged)
-    report "staged files" "$(git grep --cached -I -i -n -E -e "$regex" -- . || true)"
+    report "staged files" "$(content_hits --cached)"
     report "staged file paths" \
       "$(git diff --cached --name-only --diff-filter=ACMR | grep -i -E -e "$regex" || true)"
     ;;
