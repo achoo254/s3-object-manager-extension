@@ -148,8 +148,15 @@ onBeforeUnmount(() => {
       <v-navigation-drawer permanent width="300">
         <ConnectionList />
       </v-navigation-drawer>
-      <v-navigation-drawer v-model="queueOpen" location="right" width="380" temporary>
-        <UploadQueue @close="queueOpen = false" />
+      <v-navigation-drawer
+        v-model="queueOpen"
+        location="right"
+        width="380"
+        temporary
+        data-testid="upload-queue-drawer"
+      >
+        <!-- Rendered only while open: a hidden list re-rendering on every progress tick slowed big folder uploads. -->
+        <UploadQueue v-if="queueOpen" @close="queueOpen = false" />
       </v-navigation-drawer>
     </template>
 

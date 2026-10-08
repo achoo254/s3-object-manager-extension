@@ -9,6 +9,7 @@ import {
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import type { Page } from '@playwright/test';
 import { expect, test } from './fixtures';
 
 const endpoint = process.env.E2E_S3_ENDPOINT ?? 'http://localhost:8333';
@@ -58,20 +59,13 @@ test.afterAll(async () => {
   await admin.send(new DeleteBucketCommand({ Bucket: bucket }));
 });
 
-test('full flow against a local S3 server', async ({ manager: page, pageErrors }) => {
-  const workDir = join(tmpdir(), `s3om-e2e-${Date.now()}`);
-  mkdirSync(join(workDir, 'upload'), { recursive: true });
-  const bigFile = join(workDir, 'upload', 'big.bin');
-  const content = Buffer.alloc(FILE_SIZE);
-  for (let i = 0; i < FILE_SIZE; i += 4096) content[i] = i % 251;
-  writeFileSync(bigFile, content);
-
-  // Set the passphrase.
+/** Sets the passphrase and adds a tested connection to the local server. */
+async function createVaultAndConnection(page: Page) {
   await page.getByTestId('vault-passphrase').locator('input').fill(PASSPHRASE);
   await page.getByTestId('vault-passphrase-confirm').locator('input').fill(PASSPHRASE);
   await page.getByTestId('vault-create').click();
 
-  // Add a profile (host access to localhost is pre-granted in the e2e build).
+  // Host access to localhost is pre-granted in the e2e build.
   await page.getByTestId('profile-add').click();
   await page.getByTestId('profile-name').locator('input').fill('Local S3');
   await page.getByTestId('profile-endpoint').locator('input').fill(endpoint);
@@ -81,6 +75,17 @@ test('full flow against a local S3 server', async ({ manager: page, pageErrors }
   await page.getByTestId('profile-test').click();
   await expect(page.getByTestId('profile-test-result')).toBeVisible();
   await page.getByTestId('profile-save').click();
+}
+
+test('full flow against a local S3 server', async ({ manager: page, pageErrors }) => {
+  const workDir = join(tmpdir(), `s3om-e2e-${Date.now()}`);
+  mkdirSync(join(workDir, 'upload'), { recursive: true });
+  const bigFile = join(workDir, 'upload', 'big.bin');
+  const content = Buffer.alloc(FILE_SIZE);
+  for (let i = 0; i < FILE_SIZE; i += 4096) content[i] = i % 251;
+  writeFileSync(bigFile, content);
+
+  await createVaultAndConnection(page);
 
   // Credentials are never stored in clear text.
   const stored = await page.evaluate(() => chrome.storage.local.get(null));
@@ -164,4 +169,42 @@ test('full flow against a local S3 server', async ({ manager: page, pageErrors }
 
   // No CSP violations or uncaught errors in the extension page.
   expect(pageErrors).toEqual([]);
+});
+
+test('uploads keep running after the upload panel is closed', async ({ manager: page }) => {
+  const dir = join(tmpdir(), `s3om-e2e-many-${Date.now()}`);
+  mkdirSync(dir, { recursive: true });
+  const files = Array.from({ length: 260 }, (_, i) => {
+    const path = join(dir, `file-${String(i).padStart(3, '0')}.txt`);
+    writeFileSync(path, `content ${i}\n`.repeat(50));
+    return path;
+  });
+
+  await createVaultAndConnection(page);
+  await page.getByTestId('profile-item-Local S3').click();
+  await page.getByTestId('bucket-list').getByText(bucket).click();
+  await page.getByTestId('new-folder').click();
+  await page.getByTestId('new-folder-name').locator('input').fill('many');
+  await page.getByTestId('new-folder-create').click();
+  await page.getByTestId('entry-many/').getByRole('button', { name: 'many/' }).click();
+
+  await page.getByTestId('file-input').setInputFiles(files);
+  await page.getByTestId('upload-queue-close').click();
+  // A closed drawer stays in the DOM, slid out of view.
+  await expect(page.getByTestId('upload-queue-drawer')).not.toHaveClass(
+    /v-navigation-drawer--active/,
+  );
+
+  // With the panel closed, every file still reaches the server.
+  await expect
+    .poll(
+      async () => {
+        const listed = await admin.send(
+          new ListObjectsV2Command({ Bucket: bucket, Prefix: 'many/file-', MaxKeys: 1000 }),
+        );
+        return listed.KeyCount ?? 0;
+      },
+      { timeout: 120_000, intervals: [1000] },
+    )
+    .toBe(files.length);
 });

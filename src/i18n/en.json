@@ -220,7 +220,10 @@
       "empty": "Nothing yet. Drop files on the object list, or click “Upload files”.",
       "speed": "{speed}/s",
       "eta": "{time} left",
-      "resumed": "resumed from {count} part already on the server | resumed from {count} parts already on the server"
+      "resumed": "resumed from {count} part already on the server | resumed from {count} parts already on the server",
+      "summary": "Uploading {running} · Waiting {queued} · Done {done}/{total}",
+      "failed": "Failed {count}",
+      "keepsRunning": "Closing this panel does not stop uploads; the icon in the top bar shows how many are still running."
     },
     "pending": {
       "title": "Unfinished uploads",

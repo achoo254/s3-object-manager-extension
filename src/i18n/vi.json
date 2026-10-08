@@ -220,7 +220,10 @@
       "empty": "Chưa có tệp nào. Kéo thả tệp vào danh sách object, hoặc bấm “Tải tệp lên”.",
       "speed": "{speed}/giây",
       "eta": "còn {time}",
-      "resumed": "tiếp tục từ {count} phần đã có trên server"
+      "resumed": "tiếp tục từ {count} phần đã có trên server",
+      "summary": "Đang tải {running} · Chờ {queued} · Xong {done}/{total}",
+      "failed": "Lỗi {count}",
+      "keepsRunning": "Đóng bảng này không dừng tải lên; theo dõi số tệp đang tải ở biểu tượng trên thanh tiêu đề."
     },
     "pending": {
       "title": "Upload dở dang",
