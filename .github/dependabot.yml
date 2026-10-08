@@ -1,10 +1,13 @@
 # Dependabot only opens pull requests; nothing is merged automatically.
+# cooldown: only propose releases at least two weeks old, like the pinned versions.
 version: 2
 updates:
   - package-ecosystem: npm
     directory: /
     schedule:
       interval: weekly
+    cooldown:
+      default-days: 14
     open-pull-requests-limit: 5
     # Keep exact versions (no ^ ranges) in package.json.
     versioning-strategy: increase
@@ -12,7 +15,11 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    cooldown:
+      default-days: 14
   - package-ecosystem: docker-compose
     directory: /
     schedule:
       interval: weekly
+    cooldown:
+      default-days: 14
