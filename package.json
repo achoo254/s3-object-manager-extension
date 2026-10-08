@@ -45,7 +45,7 @@
     "@wxt-dev/module-vue": "1.0.3",
     "eslint": "9.39.5",
     "eslint-config-prettier": "10.1.8",
-    "eslint-plugin-vue": "10.11.0",
+    "eslint-plugin-vue": "10.11.1",
     "fake-indexeddb": "6.2.5",
     "prettier": "3.9.9",
     "typescript": "5.9.3",
