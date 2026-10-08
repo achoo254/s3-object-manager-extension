@@ -1,0 +1,329 @@
+{
+  "app": {
+    "title": "Quản lý object S3",
+    "welcome": {
+      "title": "Chọn hoặc thêm một kết nối",
+      "body": "Mỗi kết nối gồm địa chỉ endpoint và cặp khoá truy cập. Chọn một kết nối ở cột bên trái, hoặc bấm “Thêm kết nối”."
+    }
+  },
+  "common": {
+    "cancel": "Huỷ",
+    "close": "Đóng",
+    "continue": "Tiếp tục",
+    "create": "Tạo",
+    "delete": "Xoá",
+    "edit": "Sửa",
+    "moreActions": "Thao tác khác",
+    "refresh": "Tải lại",
+    "save": "Lưu",
+    "stop": "Dừng"
+  },
+  "vault": {
+    "passphrase": "Passphrase",
+    "lockNow": "Khoá ngay",
+    "strength": {
+      "weak": "Yếu — nên dùng ít nhất 12 ký tự, trộn chữ hoa, chữ thường, số và ký hiệu",
+      "fair": "Tạm được",
+      "strong": "Mạnh"
+    },
+    "setup": {
+      "title": "Đặt passphrase bảo vệ credentials",
+      "intro": "Mọi khoá truy cập bạn lưu sẽ được mã hoá bằng passphrase này và chỉ nằm trên máy bạn. Mỗi lần khởi động lại trình duyệt, bạn cần nhập lại passphrase.",
+      "noRecovery": "Không có cách khôi phục passphrase. Nếu quên, bạn chỉ có thể xoá toàn bộ kết nối đã lưu và nhập lại từ đầu.",
+      "confirm": "Nhập lại passphrase",
+      "mismatch": "Hai passphrase chưa khớp",
+      "submit": "Tạo kho khoá"
+    },
+    "unlock": {
+      "title": "Mở khoá",
+      "intro": "Nhập passphrase để giải mã các kết nối đã lưu.",
+      "submit": "Mở khoá",
+      "forgot": "Quên passphrase?"
+    },
+    "reset": {
+      "title": "Xoá kho khoá?",
+      "message": "Toàn bộ kết nối đã lưu (endpoint và khoá truy cập) sẽ bị xoá vĩnh viễn khỏi máy này. Dữ liệu trên server S3 không bị ảnh hưởng. Sau đó bạn đặt passphrase mới và thêm lại kết nối.",
+      "confirm": "Xoá kho khoá"
+    }
+  },
+  "connections": {
+    "title": "Kết nối",
+    "add": "Thêm kết nối",
+    "empty": "Chưa có kết nối nào",
+    "saved": "Đã lưu kết nối “{name}”",
+    "savedWithoutAccess": "Đã lưu “{name}”, nhưng chưa được cấp quyền truy cập endpoint",
+    "delete": {
+      "title": "Xoá kết nối?",
+      "message": "Kết nối “{name}” và khoá truy cập của nó sẽ bị xoá khỏi máy này. Dữ liệu trên server không bị ảnh hưởng."
+    },
+    "form": {
+      "addTitle": "Thêm kết nối",
+      "editTitle": "Sửa kết nối",
+      "name": "Tên hiển thị",
+      "endpoint": "Endpoint",
+      "endpointHint": "Địa chỉ API S3, ví dụ https://s3.example.com. http:// chỉ dùng được cho server trên máy (localhost).",
+      "endpointProblem": {
+        "invalid": "Địa chỉ không hợp lệ",
+        "unsupportedScheme": "Chỉ hỗ trợ https:// (hoặc http:// cho localhost)",
+        "insecureRemote": "http:// chỉ dùng được với localhost hoặc 127.0.0.1; hãy dùng https://"
+      },
+      "region": "Region",
+      "regionHint": "Thường là us-east-1; một số nhà cung cấp dùng auto",
+      "defaultBucket": "Bucket mặc định (tuỳ chọn)",
+      "defaultBucketHint": "Cần khi khoá không có quyền liệt kê bucket",
+      "addressing": "Kiểu địa chỉ bucket",
+      "addressingPath": "Path-style (endpoint/bucket)",
+      "addressingVirtual": "Virtual-hosted (bucket.endpoint)",
+      "accessKeyId": "Access key ID",
+      "secretAccessKey": "Secret access key",
+      "sessionToken": "Session token (tuỳ chọn)",
+      "scopedKeyAdvice": "Nên dùng khoá chỉ có quyền trên những bucket cần quản lý, không dùng khoá quản trị toàn tài khoản.",
+      "permissionNote": "Khi lưu hoặc kiểm tra, trình duyệt sẽ hỏi quyền truy cập {pattern}. Extension chỉ gửi yêu cầu tới địa chỉ này."
+    },
+    "test": {
+      "button": "Kiểm tra kết nối",
+      "okBuckets": "Kết nối được. Khoá này thấy {count} bucket.",
+      "okBucketOnly": "Kết nối được tới bucket “{bucket}”. Khoá không có quyền liệt kê bucket — vẫn dùng bình thường được."
+    },
+    "permission": {
+      "title": "Cần quyền truy cập endpoint",
+      "explain": "Extension chưa được phép gửi yêu cầu tới {pattern}. Chưa có quyền này thì không yêu cầu mạng nào được gửi đi.",
+      "grant": "Cấp quyền truy cập",
+      "denied": "Quyền truy cập chưa được cấp. Extension sẽ không gọi tới endpoint này cho đến khi bạn đồng ý."
+    }
+  },
+  "browser": {
+    "buckets": "Bucket",
+    "allBuckets": "Tất cả bucket",
+    "breadcrumbs": "Vị trí hiện tại",
+    "bucketCreated": "Tạo lúc {date}",
+    "noBuckets": "Không có bucket nào.",
+    "openByName": "Mở bucket theo tên",
+    "openByNameHint": "Dùng khi khoá chỉ có quyền trên một số bucket",
+    "open": "Mở",
+    "filter": "Lọc theo tên bắt đầu bằng…",
+    "emptyFolder": "Thư mục trống",
+    "loadMore": "Tải thêm",
+    "selectAll": "Chọn tất cả",
+    "select": "Chọn {name}",
+    "status": "Đã tải {count} mục · {requests} yêu cầu liệt kê",
+    "downloadSelected": "Tải xuống ({count})",
+    "deleteSelected": "Xoá ({count})",
+    "columns": {
+      "name": "Tên",
+      "size": "Cỡ",
+      "modified": "Sửa lần cuối",
+      "storageClass": "Lớp lưu trữ"
+    },
+    "actions": {
+      "open": "Mở",
+      "download": "Tải xuống",
+      "share": "Tạo link chia sẻ",
+      "rename": "Đổi tên / di chuyển",
+      "copy": "Sao chép",
+      "properties": "Thuộc tính",
+      "delete": "Xoá"
+    },
+    "newFolder": {
+      "title": "Tạo thư mục",
+      "name": "Tên thư mục",
+      "noSlash": "Tên thư mục không được chứa dấu /"
+    }
+  },
+  "share": {
+    "title": "Link chia sẻ",
+    "validFor": "Hiệu lực trong",
+    "duration": {
+      "hour": "1 giờ",
+      "day": "1 ngày",
+      "week": "7 ngày (tối đa)"
+    },
+    "link": "Link",
+    "copy": "Sao chép link",
+    "copied": "Đã sao chép link",
+    "expiresAt": "Link hết hạn lúc {time}.",
+    "anyoneWithLink": "Bất kỳ ai có link này đều tải được object cho đến khi link hết hạn, không cần đăng nhập."
+  },
+  "properties": {
+    "title": "Thuộc tính object",
+    "key": "Key",
+    "size": "Cỡ",
+    "contentType": "Content-Type",
+    "etag": "ETag",
+    "lastModified": "Sửa lần cuối",
+    "storageClass": "Lớp lưu trữ",
+    "cacheControl": "Cache-Control",
+    "contentEncoding": "Content-Encoding",
+    "metadata": "Metadata"
+  },
+  "transfer": {
+    "title": {
+      "rename": "Đổi tên / di chuyển",
+      "copy": "Sao chép"
+    },
+    "targetKey": "Đường dẫn mới (trong bucket)",
+    "targetFolder": "Thư mục đích (trong bucket)",
+    "targetHint": "Đường dẫn đầy đủ tính từ gốc bucket, phân cách bằng /",
+    "problem": {
+      "empty": "Nhập đường dẫn đích",
+      "same": "Đường dẫn đích trùng với nguồn",
+      "inside": "Không thể chuyển thư mục vào bên trong chính nó",
+      "trailingSlash": "Đường dẫn object không được kết thúc bằng / (sẽ bị hiểu là thư mục)"
+    },
+    "notAtomic": "Đổi tên thư mục thực hiện từng object một (sao chép rồi xoá bản gốc), không nguyên tử. Nếu bị ngắt giữa chừng, một phần object sẽ nằm ở cả hai chỗ; bạn sẽ thấy danh sách còn lại để chạy tiếp.",
+    "counting": "Đang đếm số object…",
+    "confirm": {
+      "rename": "Sẽ di chuyển {count} object.",
+      "copy": "Sẽ sao chép {count} object.",
+      "overwrite": "{count} object ở đích sẽ bị ghi đè."
+    },
+    "run": {
+      "rename": "Di chuyển",
+      "copy": "Sao chép"
+    },
+    "progress": "Đã xong {done}/{total} object",
+    "partial": "Dừng giữa chừng: đã xong {done} object, còn {remaining} object chưa xử lý. Các object dưới đây vẫn nằm ở chỗ cũ.",
+    "runAgain": "Chạy tiếp"
+  },
+  "delete": {
+    "title": "Xoá object",
+    "counting": "Đang đếm số object sẽ bị xoá… ({count})",
+    "confirm": "Sẽ xoá vĩnh viễn {count} object. Không thể hoàn tác.",
+    "run": "Xoá {count} object",
+    "progress": "Đã xoá {done}/{total}",
+    "partial": "Đã xoá {deleted} object; {failed} object không xoá được:"
+  },
+  "upload": {
+    "files": "Tải tệp lên",
+    "folder": "Tải thư mục lên",
+    "dropHere": "Thả tệp hoặc thư mục vào đây để tải lên",
+    "queued": "Đã thêm {count} tệp vào hàng đợi tải lên",
+    "status": {
+      "queued": "Đang chờ",
+      "running": "Đang tải lên",
+      "paused": "Tạm dừng",
+      "done": "Xong",
+      "error": "Lỗi",
+      "cancelled": "Đã huỷ"
+    },
+    "actions": {
+      "pause": "Tạm dừng",
+      "resume": "Tiếp tục",
+      "retry": "Thử lại",
+      "cancel": "Huỷ tải lên"
+    },
+    "queue": {
+      "title": "Tải lên",
+      "clear": "Xoá mục đã xong",
+      "empty": "Chưa có tệp nào. Kéo thả tệp vào danh sách object, hoặc bấm “Tải tệp lên”.",
+      "speed": "{speed}/giây",
+      "eta": "còn {time}",
+      "resumed": "tiếp tục từ {count} phần đã có trên server"
+    },
+    "pending": {
+      "title": "Upload dở dang",
+      "local": "Có thể tiếp tục",
+      "localHint": "Trình duyệt không tự mở lại tệp được: chọn lại đúng tệp đó để tải tiếp phần còn thiếu.",
+      "localItem": "Tệp {file} · {done} / {size} đã lên server",
+      "pickFile": "Chọn lại tệp",
+      "wrongFile": "Tệp vừa chọn không khớp với “{name}” (khác tên, cỡ hoặc thời gian sửa)",
+      "server": "Upload dở trên server (bucket {bucket})",
+      "serverHint": "Các phần đã tải lên vẫn chiếm dung lượng ở nhiều nhà cung cấp cho đến khi bị huỷ.",
+      "discard": "Huỷ và xoá các phần",
+      "none": "Không có."
+    }
+  },
+  "settings": {
+    "title": "Cài đặt",
+    "toggleTheme": "Đổi giao diện sáng/tối",
+    "language": {
+      "label": "Ngôn ngữ",
+      "auto": "Theo trình duyệt"
+    },
+    "theme": {
+      "label": "Giao diện",
+      "system": "Theo hệ thống",
+      "light": "Sáng",
+      "dark": "Tối"
+    },
+    "autoLock": "Tự khoá sau khi không thao tác",
+    "minutes": "phút",
+    "concurrency": "Số phần tải lên song song: {count}",
+    "concurrencyHint": "Mỗi phần chiếm tối đa 64 MiB bộ nhớ khi đang gửi. Tăng lên nếu đường truyền nhanh, giảm nếu máy ít RAM."
+  },
+  "errors": {
+    "codeLabel": "Mã lỗi: {code}",
+    "signatureDoesNotMatch": {
+      "title": "Chữ ký yêu cầu không hợp lệ",
+      "action": "Secret key có thể sai, hoặc đồng hồ máy lệch quá 15 phút so với giờ chuẩn. Kiểm tra lại secret key và giờ hệ thống."
+    },
+    "invalidAccessKeyId": {
+      "title": "Access key không tồn tại",
+      "action": "Access key này không có trên server hoặc đã bị xoá. Kiểm tra lại access key ID, hoặc tạo khoá mới."
+    },
+    "accessDenied": {
+      "title": "Không có quyền",
+      "action": "Khoá này không được phép làm thao tác này trên bucket/object này. Xin cấp thêm quyền cho khoá, hoặc dùng khoá khác."
+    },
+    "noSuchBucket": {
+      "title": "Bucket không tồn tại",
+      "action": "Bucket này không còn, hoặc tên bị gõ sai. Tải lại danh sách bucket."
+    },
+    "noSuchKey": {
+      "title": "Object không tồn tại",
+      "action": "Object đã bị xoá hoặc đổi tên. Tải lại danh sách."
+    },
+    "bucketAlreadyExists": {
+      "title": "Tên bucket đã được dùng",
+      "action": "Tên bucket phải là duy nhất. Chọn một tên khác."
+    },
+    "requestTimeTooSkewed": {
+      "title": "Đồng hồ máy bị lệch",
+      "action": "Giờ trên máy lệch quá xa giờ server. Bật đồng bộ giờ tự động trong cài đặt hệ thống rồi thử lại."
+    },
+    "quotaExceeded": {
+      "title": "Vượt hạn mức dung lượng",
+      "action": "Tài khoản hoặc bucket đã hết dung lượng cho phép. Xoá bớt dữ liệu hoặc nâng hạn mức với nhà cung cấp."
+    },
+    "entityTooLarge": {
+      "title": "Object quá lớn",
+      "action": "Server từ chối vì object vượt cỡ tối đa cho phép. Kiểm tra giới hạn của nhà cung cấp."
+    },
+    "slowDown": {
+      "title": "Server đang quá tải hoặc giới hạn tốc độ",
+      "action": "Server tạm thời từ chối yêu cầu. Chờ một lát rồi thử lại; upload sẽ tự thử lại vài lần."
+    },
+    "userSuspended": {
+      "title": "Tài khoản lưu trữ đang bị tạm khoá",
+      "action": "Liên hệ nhà cung cấp dịch vụ lưu trữ để biết lý do và mở lại tài khoản."
+    },
+    "notImplemented": {
+      "title": "Nhà cung cấp không hỗ trợ tính năng này",
+      "action": "Server này không có tính năng vừa dùng. Tính năng sẽ được ẩn với kết nối này trong phiên làm việc."
+    },
+    "network": {
+      "title": "Không tới được endpoint",
+      "action": "Kiểm tra địa chỉ endpoint, kết nối mạng, và xem đã cấp quyền truy cập trang cho extension chưa."
+    },
+    "proxyBlocked": {
+      "title": "Yêu cầu bị chặn trước khi tới server S3",
+      "action": "Một proxy hoặc tường lửa đứng trước endpoint đã trả về trang lỗi — không phải lỗi khoá. Liên hệ người quản trị mạng hoặc endpoint."
+    },
+    "wrongPassphrase": {
+      "title": "Sai passphrase",
+      "action": "Kiểm tra lại passphrase (chú ý chữ hoa/thường và bộ gõ tiếng Việt)."
+    },
+    "fileTooLarge": {
+      "title": "Tệp quá lớn để tải lên",
+      "action": "Tối đa {maxGiB} GiB mỗi tệp (10.000 phần × 64 MiB). Hãy chia nhỏ tệp."
+    },
+    "unknown": {
+      "title": "Đã có lỗi xảy ra",
+      "action": "Server trả về lỗi chưa được giải thích ({code}). Thử lại; nếu vẫn lỗi, tra mã lỗi trong tài liệu của nhà cung cấp."
+    },
+    "overlappingTransfer": {
+      "title": "Thư mục đích trùng với chính thư mục nguồn",
+      "action": "Có {count} object ở đích trùng tên với object nguồn chưa xử lý, chuyển tiếp sẽ ghi đè lên chúng. Chọn một thư mục đích khác."
+    }
+  }
+}

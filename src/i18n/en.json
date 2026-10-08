@@ -1,0 +1,329 @@
+{
+  "app": {
+    "title": "S3 Object Manager",
+    "welcome": {
+      "title": "Pick or add a connection",
+      "body": "A connection is an endpoint address plus an access key pair. Pick one in the left column, or click “Add connection”."
+    }
+  },
+  "common": {
+    "cancel": "Cancel",
+    "close": "Close",
+    "continue": "Continue",
+    "create": "Create",
+    "delete": "Delete",
+    "edit": "Edit",
+    "moreActions": "More actions",
+    "refresh": "Refresh",
+    "save": "Save",
+    "stop": "Stop"
+  },
+  "vault": {
+    "passphrase": "Passphrase",
+    "lockNow": "Lock now",
+    "strength": {
+      "weak": "Weak — use at least 12 characters mixing upper and lower case, digits and symbols",
+      "fair": "Fair",
+      "strong": "Strong"
+    },
+    "setup": {
+      "title": "Set a passphrase to protect your credentials",
+      "intro": "Every access key you save is encrypted with this passphrase and stays on this machine. You enter it again after each browser restart.",
+      "noRecovery": "A forgotten passphrase cannot be recovered. The only way out is to delete all saved connections and add them again.",
+      "confirm": "Repeat passphrase",
+      "mismatch": "The passphrases do not match",
+      "submit": "Create key vault"
+    },
+    "unlock": {
+      "title": "Unlock",
+      "intro": "Enter your passphrase to decrypt the saved connections.",
+      "submit": "Unlock",
+      "forgot": "Forgot your passphrase?"
+    },
+    "reset": {
+      "title": "Delete the key vault?",
+      "message": "All saved connections (endpoints and access keys) are permanently removed from this machine. Data on the S3 servers is not touched. You then set a new passphrase and add your connections again.",
+      "confirm": "Delete key vault"
+    }
+  },
+  "connections": {
+    "title": "Connections",
+    "add": "Add connection",
+    "empty": "No connections yet",
+    "saved": "Saved connection “{name}”",
+    "savedWithoutAccess": "Saved “{name}”, but access to its endpoint has not been granted",
+    "delete": {
+      "title": "Delete connection?",
+      "message": "Connection “{name}” and its access key are removed from this machine. Data on the server is not touched."
+    },
+    "form": {
+      "addTitle": "Add connection",
+      "editTitle": "Edit connection",
+      "name": "Display name",
+      "endpoint": "Endpoint",
+      "endpointHint": "S3 API address, e.g. https://s3.example.com. http:// only works for a server on this machine (localhost).",
+      "endpointProblem": {
+        "invalid": "Not a valid address",
+        "unsupportedScheme": "Only https:// is supported (or http:// for localhost)",
+        "insecureRemote": "http:// only works with localhost or 127.0.0.1; use https://"
+      },
+      "region": "Region",
+      "regionHint": "Usually us-east-1; some providers use auto",
+      "defaultBucket": "Default bucket (optional)",
+      "defaultBucketHint": "Needed when the key may not list buckets",
+      "addressing": "Bucket addressing",
+      "addressingPath": "Path-style (endpoint/bucket)",
+      "addressingVirtual": "Virtual-hosted (bucket.endpoint)",
+      "accessKeyId": "Access key ID",
+      "secretAccessKey": "Secret access key",
+      "sessionToken": "Session token (optional)",
+      "scopedKeyAdvice": "Prefer a key limited to the buckets you manage, not an account-wide admin key.",
+      "permissionNote": "When you save or test, the browser asks for access to {pattern}. The extension only sends requests to this address."
+    },
+    "test": {
+      "button": "Test connection",
+      "okBuckets": "Connected. This key sees {count} bucket. | Connected. This key sees {count} buckets.",
+      "okBucketOnly": "Connected to bucket “{bucket}”. The key may not list buckets — that is fine."
+    },
+    "permission": {
+      "title": "Access to the endpoint is needed",
+      "explain": "The extension may not send requests to {pattern} yet. Until you allow it, no network request is made.",
+      "grant": "Grant access",
+      "denied": "Access was not granted. The extension will not contact this endpoint until you allow it."
+    }
+  },
+  "browser": {
+    "buckets": "Buckets",
+    "allBuckets": "All buckets",
+    "breadcrumbs": "Current location",
+    "bucketCreated": "Created {date}",
+    "noBuckets": "No buckets.",
+    "openByName": "Open bucket by name",
+    "openByNameHint": "For keys limited to some buckets",
+    "open": "Open",
+    "filter": "Filter by names starting with…",
+    "emptyFolder": "This folder is empty",
+    "loadMore": "Load more",
+    "selectAll": "Select all",
+    "select": "Select {name}",
+    "status": "{count} items loaded · {requests} list requests",
+    "downloadSelected": "Download ({count})",
+    "deleteSelected": "Delete ({count})",
+    "columns": {
+      "name": "Name",
+      "size": "Size",
+      "modified": "Last modified",
+      "storageClass": "Storage class"
+    },
+    "actions": {
+      "open": "Open",
+      "download": "Download",
+      "share": "Create share link",
+      "rename": "Rename / move",
+      "copy": "Copy",
+      "properties": "Properties",
+      "delete": "Delete"
+    },
+    "newFolder": {
+      "title": "New folder",
+      "name": "Folder name",
+      "noSlash": "A folder name cannot contain /"
+    }
+  },
+  "share": {
+    "title": "Share link",
+    "validFor": "Valid for",
+    "duration": {
+      "hour": "1 hour",
+      "day": "1 day",
+      "week": "7 days (maximum)"
+    },
+    "link": "Link",
+    "copy": "Copy link",
+    "copied": "Link copied",
+    "expiresAt": "The link expires at {time}.",
+    "anyoneWithLink": "Anyone with this link can download the object until it expires, without signing in."
+  },
+  "properties": {
+    "title": "Object properties",
+    "key": "Key",
+    "size": "Size",
+    "contentType": "Content-Type",
+    "etag": "ETag",
+    "lastModified": "Last modified",
+    "storageClass": "Storage class",
+    "cacheControl": "Cache-Control",
+    "contentEncoding": "Content-Encoding",
+    "metadata": "Metadata"
+  },
+  "transfer": {
+    "title": {
+      "rename": "Rename / move",
+      "copy": "Copy"
+    },
+    "targetKey": "New path (inside the bucket)",
+    "targetFolder": "Target folder (inside the bucket)",
+    "targetHint": "Full path from the bucket root, separated by /",
+    "problem": {
+      "empty": "Enter a target path",
+      "same": "The target is the same as the source",
+      "inside": "A folder cannot be moved into itself",
+      "trailingSlash": "An object path cannot end with / (it would read as a folder)"
+    },
+    "notAtomic": "Renaming a folder goes object by object (copy, then delete the original) and is not atomic. If it stops half way, some objects exist in both places; you get the list of what is left to run it again.",
+    "counting": "Counting objects…",
+    "confirm": {
+      "rename": "{count} object will be moved. | {count} objects will be moved.",
+      "copy": "{count} object will be copied. | {count} objects will be copied.",
+      "overwrite": "{count} object at the target will be overwritten. | {count} objects at the target will be overwritten."
+    },
+    "run": {
+      "rename": "Move",
+      "copy": "Copy"
+    },
+    "progress": "{done}/{total} objects done",
+    "partial": "Stopped half way: {done} objects done, {remaining} not processed. The objects below are still in their old place.",
+    "runAgain": "Run again"
+  },
+  "delete": {
+    "title": "Delete objects",
+    "counting": "Counting objects to delete… ({count})",
+    "confirm": "{count} object will be permanently deleted. This cannot be undone. | {count} objects will be permanently deleted. This cannot be undone.",
+    "run": "Delete {count} object | Delete {count} objects",
+    "progress": "Deleted {done}/{total}",
+    "partial": "Deleted {deleted} objects; {failed} could not be deleted:"
+  },
+  "upload": {
+    "files": "Upload files",
+    "folder": "Upload folder",
+    "dropHere": "Drop files or folders here to upload",
+    "queued": "Added {count} file to the upload queue | Added {count} files to the upload queue",
+    "status": {
+      "queued": "Waiting",
+      "running": "Uploading",
+      "paused": "Paused",
+      "done": "Done",
+      "error": "Error",
+      "cancelled": "Cancelled"
+    },
+    "actions": {
+      "pause": "Pause",
+      "resume": "Resume",
+      "retry": "Retry",
+      "cancel": "Cancel upload"
+    },
+    "queue": {
+      "title": "Uploads",
+      "clear": "Clear finished",
+      "empty": "Nothing yet. Drop files on the object list, or click “Upload files”.",
+      "speed": "{speed}/s",
+      "eta": "{time} left",
+      "resumed": "resumed from {count} part already on the server | resumed from {count} parts already on the server"
+    },
+    "pending": {
+      "title": "Unfinished uploads",
+      "local": "Can be resumed",
+      "localHint": "The browser cannot reopen a file by itself: pick the same file again to upload the missing parts.",
+      "localItem": "File {file} · {done} / {size} on the server",
+      "pickFile": "Pick the file again",
+      "wrongFile": "The chosen file does not match “{name}” (different name, size or modification time)",
+      "server": "Unfinished uploads on the server (bucket {bucket})",
+      "serverHint": "Uploaded parts keep using storage at many providers until the upload is cancelled.",
+      "discard": "Cancel and delete parts",
+      "none": "None."
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "toggleTheme": "Switch light/dark theme",
+    "language": {
+      "label": "Language",
+      "auto": "Same as browser"
+    },
+    "theme": {
+      "label": "Theme",
+      "system": "Same as system",
+      "light": "Light",
+      "dark": "Dark"
+    },
+    "autoLock": "Lock automatically after inactivity",
+    "minutes": "minutes",
+    "concurrency": "Parts uploaded in parallel: {count}",
+    "concurrencyHint": "Each part in flight holds up to 64 MiB of memory. Raise it on fast links, lower it on machines with little RAM."
+  },
+  "errors": {
+    "codeLabel": "Error code: {code}",
+    "signatureDoesNotMatch": {
+      "title": "Request signature is not valid",
+      "action": "The secret key may be wrong, or this machine's clock is more than 15 minutes off. Check the secret key and the system time."
+    },
+    "invalidAccessKeyId": {
+      "title": "Access key does not exist",
+      "action": "The server does not know this access key, or it was deleted. Check the access key ID, or create a new key."
+    },
+    "accessDenied": {
+      "title": "Access denied",
+      "action": "This key may not perform this operation on this bucket or object. Ask for more permissions on the key, or use another key."
+    },
+    "noSuchBucket": {
+      "title": "Bucket does not exist",
+      "action": "The bucket is gone or its name is misspelled. Reload the bucket list."
+    },
+    "noSuchKey": {
+      "title": "Object does not exist",
+      "action": "The object was deleted or renamed. Reload the list."
+    },
+    "bucketAlreadyExists": {
+      "title": "Bucket name already taken",
+      "action": "Bucket names must be unique. Choose another name."
+    },
+    "requestTimeTooSkewed": {
+      "title": "This machine's clock is off",
+      "action": "The local time is too far from the server's. Turn on automatic time sync in the system settings and try again."
+    },
+    "quotaExceeded": {
+      "title": "Storage quota exceeded",
+      "action": "The account or bucket has no space left. Delete data or raise the quota with your provider."
+    },
+    "entityTooLarge": {
+      "title": "Object too large",
+      "action": "The server refused an object above its size limit. Check your provider's limits."
+    },
+    "slowDown": {
+      "title": "The server is busy or throttling",
+      "action": "The server refused the request for now. Wait a moment and try again; uploads retry a few times by themselves."
+    },
+    "userSuspended": {
+      "title": "The storage account is suspended",
+      "action": "Contact your storage provider to find out why and reactivate the account."
+    },
+    "notImplemented": {
+      "title": "The provider does not support this feature",
+      "action": "This server lacks the feature you used. It is hidden for this connection for the rest of the session."
+    },
+    "network": {
+      "title": "Cannot reach the endpoint",
+      "action": "Check the endpoint address, your network, and that the extension was granted access to the site."
+    },
+    "proxyBlocked": {
+      "title": "Blocked before reaching the S3 server",
+      "action": "A proxy or firewall in front of the endpoint returned an error page — this is not a key problem. Contact the network or endpoint administrator."
+    },
+    "wrongPassphrase": {
+      "title": "Wrong passphrase",
+      "action": "Check the passphrase (mind upper/lower case and your keyboard layout)."
+    },
+    "fileTooLarge": {
+      "title": "File too large to upload",
+      "action": "At most {maxGiB} GiB per file (10,000 parts × 64 MiB). Split the file."
+    },
+    "unknown": {
+      "title": "Something went wrong",
+      "action": "The server returned an error that is not explained here ({code}). Try again; if it persists, look up the code in your provider's documentation."
+    },
+    "overlappingTransfer": {
+      "title": "The target overlaps the source folder",
+      "action": "{count} target keys are also source objects that have not been processed yet; continuing would overwrite them. Choose another target folder."
+    }
+  }
+}

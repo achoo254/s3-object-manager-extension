@@ -1,0 +1,10 @@
+{
+  "extName": {
+    "message": "S3 Object Manager",
+    "description": "Extension name (working title, final name chosen at release)"
+  },
+  "extDescription": {
+    "message": "Browse, upload, download and share objects on any S3-compatible storage. Credentials stay encrypted on your machine, no telemetry.",
+    "description": "Store description of the extension"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "extName": {
+    "message": "S3 Object Manager",
+    "description": "Tên extension (tạm, chốt khi phát hành)"
+  },
+  "extDescription": {
+    "message": "Duyệt, tải lên, tải xuống và chia sẻ object trên mọi dịch vụ lưu trữ tương thích S3. Credentials mã hoá trên máy, không telemetry.",
+    "description": "Mô tả extension trên store"
+  }
+}
