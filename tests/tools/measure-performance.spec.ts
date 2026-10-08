@@ -185,6 +185,7 @@ async function openBucket(page: Page, bucket: string) {
   await page.getByTestId('profile-secret-key').locator('input').fill(secretAccessKey);
   await page.getByTestId('profile-save').click();
   await page.getByTestId('profile-item-Perf').click();
+  await page.getByTestId('bucket-open-by-name').click();
   await page.getByTestId('bucket-name-input').locator('input').fill(bucket);
   await page.getByTestId('bucket-name-input').locator('input').press('Enter');
   await expect(page.getByTestId('crumb-bucket')).toHaveText(bucket);

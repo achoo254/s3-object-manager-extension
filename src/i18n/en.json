@@ -129,7 +129,8 @@
       "title": "New folder",
       "name": "Folder name",
       "noSlash": "A folder name cannot contain /"
-    }
+    },
+    "openOtherByName": "Open another bucket by name"
   },
   "share": {
     "title": "Share link",

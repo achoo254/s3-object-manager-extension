@@ -129,7 +129,8 @@
       "title": "Tạo thư mục",
       "name": "Tên thư mục",
       "noSlash": "Tên thư mục không được chứa dấu /"
-    }
+    },
+    "openOtherByName": "Mở bucket khác theo tên"
   },
   "share": {
     "title": "Link chia sẻ",
