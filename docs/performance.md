@@ -33,9 +33,22 @@ phép đo, lấy mẫu mỗi 0,5 s; "tăng" = đỉnh trừ mức nền ngay tr�
 "Memory footprint" của Chrome Task Manager; tiến trình network service (nơi trình duyệt đệm dữ liệu
 gửi đi) không tính vào RAM của tab. File upload là file thưa (sparse) để tạo nhanh.
 
+### Thông lượng trên MinIO (tham khảo, cùng máy)
+
+MinIO `RELEASE.2025-09-07T16-13-09Z` (binary, một ổ đĩa), cùng phép đo 2 GB, 4 part song song:
+
+| Lượt | Extension (s)    | `aws s3 cp` (s)   | Trung vị extension / aws | Tỉ lệ |
+| ---- | ---------------- | ----------------- | ------------------------ | ----- |
+| 1    | 3,3 / 10,6 / 2,8 | 2,6 / 2,0 / 10,0  | 617 / 783 MiB/s          | 79%   |
+| 2    | 7,8 / 6,8 / 8,8  | 10,9 / 13,0 / 9,4 | 261 / 188 MiB/s          | 139%  |
+
+Trên loopback, cả hai công cụ dao động hơn gấp ba lần giữa các lượt (đĩa, cache hệ điều hành, việc nền
+của server), nên tỉ lệ 57% đo trên SeaweedFS không đủ chắc để kết luận extension chậm hơn.
+
 ## Thông lượng chưa đạt: nguyên nhân khả dĩ và đề xuất
 
-Không hạ ngưỡng. Những gì số đo cho thấy:
+Không hạ ngưỡng. Quyết định đã chọn (08/10/2026): giữ mặc định 4 × 8 MiB, đo lại qua mạng thật rồi
+mới quyết. Những gì số đo cho thấy:
 
 - Tăng từ 4 lên 8 part song song chỉ nhích từ 324 lên 350 MiB/s, nên số luồng **không** phải nút
   thắt chính.
@@ -45,7 +58,7 @@ Không hạ ngưỡng. Những gì số đo cho thấy:
 - 324 MiB/s ≈ 2,7 Gbit/s: vẫn vượt xa băng thông mạng thật của phần lớn người dùng (≤ 1 Gbit/s ≈
   119 MiB/s), nơi cả hai công cụ đều bị giới hạn bởi mạng.
 
-Đề xuất (cần chủ dự án chọn, chưa làm):
+Các hướng đã cân nhắc:
 
 1. Đo lại trên Ceph RGW qua mạng thật như phase 6 yêu cầu; nếu ở đó đạt ≥ 80% thì ghi ngưỡng loopback
    là giới hạn của trình duyệt.

@@ -131,7 +131,7 @@ Phase 3 và 4 làm song song được (tệp tách biệt: `src/features/browser
 | 3 | Xong | — |
 | 4 | Xong | Kiểm tay tắt mạng giữa chừng trong trình duyệt thật (logic tiếp tục đã kiểm bằng test tích hợp) |
 | 5 | Xong | Đi tay hết màn hình với trình duyệt tiếng Việt (đã soát bằng ảnh chụp) |
-| 6 | Một phần | E2E + SeaweedFS đạt; MinIO/Ceph RGW/B2 chưa kiểm; thông lượng upload 57% < 80% trên loopback — đã chọn giữ mặc định và đo lại qua mạng thật (docs/performance.md) |
+| 6 | Một phần | SeaweedFS + MinIO đạt mọi ô (tích hợp + e2e); Ceph RGW và B2 cần tài nguyên của chủ dự án (các bước trong docs/compatibility.md); thông lượng đo trên loopback dao động 57–139%, chờ đo qua mạng thật |
 | 7 | Chuẩn bị xong | Chốt tên, đăng trang privacy (GitHub Pages), tài khoản store + 2FA, tag `v0.1.0`, nộp hai store |
 
 ## Rủi ro chính

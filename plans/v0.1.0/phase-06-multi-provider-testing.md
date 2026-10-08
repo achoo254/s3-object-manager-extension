@@ -54,8 +54,12 @@ Ngưỡng không đạt ⟹ nêu nguyên nhân khả dĩ và đề xuất, khôn
 ## Kết quả (08/10/2026)
 
 - E2E Playwright đủ kịch bản, đạt trên SeaweedFS 4.47; job `e2e` trong CI dùng `docker compose`.
-- Ma trận: SeaweedFS đạt mọi ô (docs/compatibility.md). MinIO, Ceph RGW, Backblaze B2 chưa kiểm — cần tài nguyên ngoài phiên; chạy `pnpm test:integration` với biến `S3_TEST_*`.
-- Đo performance (docs/performance.md, `pnpm perf`): 4/5 đạt trên SeaweedFS; **thông lượng upload 57% của `aws s3 cp` < 80%** — đã nêu nguyên nhân và đề xuất, không hạ ngưỡng. Chưa đo trên Ceph RGW.
+- Ma trận: SeaweedFS và MinIO đạt mọi ô (docs/compatibility.md). MinIO không còn image công khai nên kiểm bằng binary chính thức bản cuối `RELEASE.2025-09-07T16-13-09Z` (đối chiếu sha256).
+- Khoá phạm vi hẹp: cả hai server trả danh sách bucket đã lọc thay vì `AccessDenied` (MinIO kể cả khi policy cấm hẳn `ListAllMyBuckets`); nhánh dự phòng `HeadBucket` chỉ có unit test.
+- Ceph RGW: không dùng khoá trong tệp môi trường thật và không dựng Ceph trên máy (quyết định 08/10/2026); chờ cụm thử nghiệm của chủ dự án.
+- Backblaze B2: chờ chủ dự án tạo tài khoản miễn phí; từng bước và lệnh chạy có trong docs/compatibility.md.
+- Sửa lỗi phát hiện khi rà ma trận: virtual-hosted với `localhost`/IP gửi tới `<bucket>.localhost`, ngoài quyền host đã xin; nay luôn dùng path-style cho các host này.
+- Đo performance (docs/performance.md, `pnpm perf`): 4/5 đạt trên SeaweedFS; thông lượng 57% `aws s3 cp` trên SeaweedFS, 79% và 139% ở hai lượt trên MinIO — loopback quá nhiễu để kết luận; đã chọn đo lại qua mạng thật. Chưa đo trên Ceph RGW.
 
 ## Rủi ro
 
