@@ -75,7 +75,8 @@ SeaweedFS chạy bằng docker để phát triển, không cần kết nối t�
 - GitHub Actions không cho truyền tham số lệnh cho service container, nên SeaweedFS chạy bằng `docker compose up -d` trong job (cùng cấu hình với máy dev).
 - `-volume.max=100`: mỗi bucket SeaweedFS là một collection; mặc định hết chỗ sau vài bucket thử.
 - Cổng từ cấm: `scripts/check-forbidden-terms.sh` (CI chỉ in số lần khớp), hook qua `scripts/install-git-hooks.sh`; đã tự kiểm trên repo nháp (thiếu/rỗng ⟹ lỗi, cụm có dấu cách, tên tệp, commit message).
-- Còn lại: đặt secret, bật secret scanning + push protection, cài hook, chứng thực dương trên nhánh thử, CI xanh lần đầu.
+- CI xanh trên GitHub (08/10/2026). Cổng từ cấm in vị trí `tệp:dòng` của chỗ khớp (không in nội dung) và bỏ qua mã băm integrity của lockfile (base64 ngẫu nhiên từng khớp nhầm 3 dòng).
+- Còn lại: bật secret scanning + push protection, cài hook trên máy, chứng thực dương trên nhánh thử.
 
 ## Rủi ro
 

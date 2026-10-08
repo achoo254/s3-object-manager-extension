@@ -55,4 +55,16 @@ Không hạ ngưỡng. Những gì số đo cho thấy:
 
 ## Chưa đo
 
-- Các phép đo trên **Ceph RGW** (cần cụm thử nghiệm riêng, không có trong phiên này).
+- Các phép đo trên **Ceph RGW** qua mạng thật (cần cụm thử nghiệm riêng, không có trong phiên này).
+  Đây là bước tiếp theo đã chọn cho ngưỡng thông lượng: giữ mặc định, đo lại qua mạng rồi mới quyết.
+  Lệnh (khoá chỉ dùng để thử, không commit):
+
+  ```bash
+  E2E_EXTRA_HOSTS='https://<host>/*' pnpm build:e2e
+  PERF_ONLY=throughput PERF_S3_ENDPOINT=https://<endpoint> PERF_S3_REGION=<region> \
+  PERF_S3_ACCESS_KEY_ID=... PERF_S3_SECRET_ACCESS_KEY=... PERF_AWS_CLI=<đường dẫn aws> pnpm perf
+  ```
+
+  Khoá cần quyền tạo/xoá bucket (mỗi lượt đo dùng một bucket tạm). `E2E_EXTRA_HOSTS` cấp sẵn quyền
+  truy cập endpoint cho bản build e2e (Playwright không bấm được hộp thoại xin quyền); bản phát hành
+  không bị ảnh hưởng.

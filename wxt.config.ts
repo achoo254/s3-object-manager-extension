@@ -21,8 +21,17 @@ export default defineConfig({
       default_title: '__MSG_extName__',
     },
     // E2E builds only: browser automation cannot click the permission prompt, so the local
-    // test server's origin is granted at install. Release builds never contain this.
-    ...(mode === 'e2e' ? { host_permissions: ['http://localhost/*'] } : {}),
+    // test server's origin (plus any in E2E_EXTRA_HOSTS, comma-separated match patterns, e.g.
+    // for performance runs against a remote endpoint) is granted at install. Release builds
+    // never contain this.
+    ...(mode === 'e2e'
+      ? {
+          host_permissions: [
+            'http://localhost/*',
+            ...(process.env.E2E_EXTRA_HOSTS?.split(',').filter(Boolean) ?? []),
+          ],
+        }
+      : {}),
   }),
   vite: () => ({
     plugins: [

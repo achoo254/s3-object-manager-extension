@@ -126,12 +126,12 @@ Phase 3 và 4 làm song song được (tệp tách biệt: `src/features/browser
 
 | # | Trạng thái | Còn lại |
 |---|---|---|
-| 1 | Xong mã + CI | Đặt secret `FORBIDDEN_TERMS_REGEX`, bật secret scanning/push protection, chạy `scripts/install-git-hooks.sh`, chứng thực dương trên nhánh thử; CI xanh trên GitHub chưa chạy (chưa push) |
+| 1 | Xong, CI xanh trên GitHub | Bật secret scanning/push protection, chạy `scripts/install-git-hooks.sh` trên máy, chứng thực dương trên nhánh thử |
 | 2 | Xong | Kiểm tay hộp thoại cấp quyền thật (bản e2e cấp sẵn `http://localhost`) |
 | 3 | Xong | — |
 | 4 | Xong | Kiểm tay tắt mạng giữa chừng trong trình duyệt thật (logic tiếp tục đã kiểm bằng test tích hợp) |
 | 5 | Xong | Đi tay hết màn hình với trình duyệt tiếng Việt (đã soát bằng ảnh chụp) |
-| 6 | Một phần | E2E + SeaweedFS đạt; MinIO/Ceph RGW/B2 chưa kiểm; thông lượng upload 57% < 80% (docs/performance.md) |
+| 6 | Một phần | E2E + SeaweedFS đạt; MinIO/Ceph RGW/B2 chưa kiểm; thông lượng upload 57% < 80% trên loopback — đã chọn giữ mặc định và đo lại qua mạng thật (docs/performance.md) |
 | 7 | Chuẩn bị xong | Chốt tên, đăng trang privacy (GitHub Pages), tài khoản store + 2FA, tag `v0.1.0`, nộp hai store |
 
 ## Rủi ro chính

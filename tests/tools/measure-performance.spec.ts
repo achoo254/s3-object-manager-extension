@@ -2,7 +2,8 @@
  * Measures the thresholds of the performance table in plans/v0.1.0/plan.md against a local
  * S3-compatible server, and appends the results to PERF_OUTPUT (JSON lines).
  *
- * Variables: PERF_S3_ENDPOINT (http://localhost:8333), PERF_AWS_CLI (path to `aws`, for the
+ * Variables: PERF_S3_ENDPOINT (http://localhost:8333), PERF_S3_ACCESS_KEY_ID /
+ * PERF_S3_SECRET_ACCESS_KEY / PERF_S3_REGION (default: the local test identity), PERF_AWS_CLI (path to `aws`, for the
  * throughput comparison; skipped when unset), PERF_OUTPUT (test-results/perf.jsonl),
  * PERF_UPLOAD_GB (2), PERF_MEMORY_GB (5), PERF_CONCURRENCY (parallel parts, default setting 4),
  * PERF_ONLY (comma list of measurement names).
@@ -35,8 +36,9 @@ const identity = JSON.parse(
   readFileSync(new URL('../../docker/seaweedfs-s3.json', import.meta.url), 'utf8'),
 ) as { identities: { credentials: { accessKey: string; secretKey: string }[] }[] };
 const keys = identity.identities[0]?.credentials[0];
-const accessKeyId = keys?.accessKey ?? '';
-const secretAccessKey = keys?.secretKey ?? '';
+const accessKeyId = process.env.PERF_S3_ACCESS_KEY_ID ?? keys?.accessKey ?? '';
+const secretAccessKey = process.env.PERF_S3_SECRET_ACCESS_KEY ?? keys?.secretKey ?? '';
+const region = process.env.PERF_S3_REGION ?? 'us-east-1';
 const output = process.env.PERF_OUTPUT ?? 'test-results/perf.jsonl';
 const only = process.env.PERF_ONLY?.split(',');
 const GiB = 1024 ** 3;
@@ -48,7 +50,7 @@ mkdirSync(workDir, { recursive: true });
 
 const admin = new S3Client({
   endpoint,
-  region: 'us-east-1',
+  region,
   forcePathStyle: true,
   credentials: { accessKeyId, secretAccessKey },
   requestChecksumCalculation: 'WHEN_REQUIRED',
@@ -346,7 +348,7 @@ test('upload throughput compared with aws s3 cp', async () => {
               ...process.env,
               AWS_ACCESS_KEY_ID: accessKeyId,
               AWS_SECRET_ACCESS_KEY: secretAccessKey,
-              AWS_DEFAULT_REGION: 'us-east-1',
+              AWS_DEFAULT_REGION: region,
               AWS_REQUEST_CHECKSUM_CALCULATION: 'when_required',
             },
           },
