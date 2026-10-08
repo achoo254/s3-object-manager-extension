@@ -34,9 +34,21 @@ report() {
   fi
 }
 
+# Prints `path:line` of each hit from `git grep -n` output ($1), never the matched text, so
+# public CI logs show where to look. A path that itself matches is replaced by a placeholder.
+locations() {
+  [[ -n "$1" ]] || return 0
+  printf '%s\n' "$1" | while IFS=: read -r path line _; do
+    if printf '%s\n' "$path" | grep -q -i -E -e "$regex"; then path="<path hidden>"; fi
+    echo "  at $path:$line" >&2
+  done
+}
+
 case "$mode" in
   files)
-    report "tracked files" "$(git grep -I -i -n -E -e "$regex" -- . || true)"
+    hits="$(git grep -I -i -n -E -e "$regex" -- . || true)"
+    report "tracked files" "$hits"
+    if [[ "$verbose" != "1" ]]; then locations "$hits"; fi
     report "file paths" "$(git ls-files | grep -i -E -e "$regex" || true)"
     ;;
   staged)
