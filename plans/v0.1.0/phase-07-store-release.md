@@ -1,6 +1,6 @@
 # Phase 7 — Phát hành Chrome Web Store và Edge Add-ons
 
-Tier: **S** · Phụ thuộc: phase 6 · Trạng thái: chưa làm · Issue: #7
+Tier: **S** · Phụ thuộc: phase 6 · Trạng thái: đã chuẩn bị, chờ chủ dự án · Issue: #7
 
 ## Mục tiêu
 
@@ -35,6 +35,11 @@ trình đóng gói lặp lại được từ tag git.
 - Hai store trạng thái "Đã xuất bản" (hoặc "Đang chờ duyệt" kèm mã nộp — ghi lại nếu review chưa xong khi kết thúc phase).
 - Cài từ store trên một máy sạch, chạy lại kịch bản e2e bằng tay với SeaweedFS.
 - Link privacy mở được không cần đăng nhập.
+
+## Kết quả (08/10/2026)
+
+- Có sẵn: workflow `release.yml` (tag ⟹ zip Chrome + Edge lên GitHub Release), `CHANGELOG.md`, trang privacy song ngữ `docs/privacy.md`, nội dung nộp store `docs/store-listing.md`, 12 ảnh 1280×800 trong `docs/store/screenshots` (tạo lại bằng `pnpm screenshots`).
+- Còn lại (cần chủ dự án): chốt tên, bật GitHub Pages, tài khoản store + 2FA, tag `v0.1.0`, nộp, xử lý review.
 
 ## Rủi ro
 

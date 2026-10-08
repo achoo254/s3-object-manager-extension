@@ -1,6 +1,6 @@
 # Phase 5 — Tiếng Việt hoàn chỉnh và dịch lỗi S3
 
-Tier: **S** · Phụ thuộc: phase 3, 4 · Trạng thái: chưa làm · Issue: #5
+Tier: **S** · Phụ thuộc: phase 3, 4 · Trạng thái: xong · Issue: #5
 
 ## Mục tiêu
 
@@ -45,3 +45,9 @@ gặp hiện một câu tiếng Việt cho người dùng biết **chuyện gì 
 - Unit: mỗi dòng của bảng ra đúng khoá dịch; mã lạ ⟹ câu chung có kèm mã gốc.
 - CI: `check-i18n-keys` đỏ khi xoá một khoá ở một bên.
 - Thủ công: đổi trình duyệt sang tiếng Việt, đi hết các màn hình, không còn chuỗi tiếng Anh sót.
+
+## Kết quả (08/10/2026)
+
+- `scripts/check-i18n-keys.mjs` (CI): hai tệp cùng 219 khoá và mọi khoá viết cứng trong mã đều có.
+- `describeS3Error`: 22 ca unit, kể cả 403 trang HTML (proxy) và 503 không có XML — hình dạng lỗi lấy từ SDK thật.
+- Đã soát bằng ảnh chụp mọi màn chính ở tiếng Việt và tiếng Anh, sáng và tối.

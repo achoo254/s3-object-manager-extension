@@ -1,6 +1,6 @@
 # Phase 2 — Profile kết nối, vault credentials, quyền host
 
-Tier: **M** · Phụ thuộc: phase 1 · Trạng thái: chưa làm · Issue: #2
+Tier: **M** · Phụ thuộc: phase 1 · Trạng thái: xong · Issue: #2
 
 ## Mục tiêu
 
@@ -67,6 +67,13 @@ dùng cấp quyền, và mọi module khác lấy S3 client từ **một** chỗ
 - Thủ công trên SeaweedFS: xoá lô 3 object thành công.
 - Thủ công: đóng hẳn trình duyệt, mở lại ⟹ phải nhập passphrase; xem `chrome.storage.local` trong DevTools chỉ thấy bản mã.
 - Thủ công: thêm profile SeaweedFS local ⟹ hộp thoại cấp quyền hiện đúng origin `http://localhost`; từ chối ⟹ không request nào đi ra.
+
+## Kết quả (08/10/2026)
+
+- Unit: `vault-crypto`, `vault-store`, `s3-client-factory` (request `DeleteObjects` đã ký có `Content-MD5` đúng, không còn `x-amz-checksum-*`), `host-permission`, `test-connection`.
+- Tích hợp SeaweedFS: xoá lô 3 object đạt. E2E: `chrome.storage.local` không chứa secret; khoá ⟹ session không còn khoá.
+- Pattern quyền host không dùng wildcard cho localhost/IP; xoá kho khoá thu hồi mọi origin đã cấp.
+- Còn kiểm tay: hộp thoại cấp quyền thật (bản e2e cấp sẵn `http://localhost` vì Playwright không bấm được hộp thoại đó).
 
 ## Rủi ro
 

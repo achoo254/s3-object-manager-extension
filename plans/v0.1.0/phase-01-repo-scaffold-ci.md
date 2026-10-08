@@ -1,6 +1,6 @@
 # Phase 1 — Khung repo, build, CI, SeaweedFS local
 
-Tier: **S** · Phụ thuộc: — · Trạng thái: chưa làm · Issue: #1
+Tier: **S** · Phụ thuộc: — · Trạng thái: xong mã; còn cấu hình GitHub · Issue: #1
 
 ## Mục tiêu
 
@@ -67,6 +67,15 @@ SeaweedFS chạy bằng docker để phát triển, không cần kết nối t�
 - Chứng thực dương cho cổng từ cấm: tạm thêm một tệp chứa một từ trong danh sách trên nhánh thử ⟹ CI phải **đỏ** và
   hook local phải chặn commit; xoá tệp ⟹ xanh. Thử thêm một cụm **có dấu cách** (tên bảng màu viết rời) và một commit
   message chứa từ cấm — cả hai phải đỏ. Không merge nhánh thử.
+
+## Kết quả (08/10/2026)
+
+- Build `chrome-mv3` + `edge-mv3`, zip chỉ xin `storage` + `downloads`; e2e mở tab manager không lỗi CSP.
+- Seed viết bằng Node + SDK (`scripts/seed-local-s3.mjs`) thay cho `.sh`: không cần cài AWS CLI, dùng lại được để tạo 100.000 object.
+- GitHub Actions không cho truyền tham số lệnh cho service container, nên SeaweedFS chạy bằng `docker compose up -d` trong job (cùng cấu hình với máy dev).
+- `-volume.max=100`: mỗi bucket SeaweedFS là một collection; mặc định hết chỗ sau vài bucket thử.
+- Cổng từ cấm: `scripts/check-forbidden-terms.sh` (CI chỉ in số lần khớp), hook qua `scripts/install-git-hooks.sh`; đã tự kiểm trên repo nháp (thiếu/rỗng ⟹ lỗi, cụm có dấu cách, tên tệp, commit message).
+- Còn lại: đặt secret, bật secret scanning + push protection, cài hook, chứng thực dương trên nhánh thử, CI xanh lần đầu.
 
 ## Rủi ro
 
