@@ -33,7 +33,7 @@
     "@smithy/md5-js": "4.5.2",
     "vue": "3.5.43",
     "vue-i18n": "11.4.12",
-    "vuetify": "3.13.5"
+    "vuetify": "4.2.2"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
