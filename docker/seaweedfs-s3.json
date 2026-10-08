@@ -1,0 +1,14 @@
+{
+  "identities": [
+    {
+      "name": "local-test",
+      "credentials": [
+        {
+          "accessKey": "localtestaccesskey",
+          "secretKey": "localtestsecretkey-not-a-real-secret"
+        }
+      ],
+      "actions": ["Admin", "Read", "List", "Tagging", "Write"]
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+name: Release
+
+# Pushing a tag vX.Y.Z builds the Chrome and Edge packages and attaches them to a GitHub
+# Release. A tag with a suffix (vX.Y.Z-beta.N) makes a pre-release for testing by hand.
+# Uploading to the stores is done by hand (no store tokens are kept in CI).
+on:
+  push:
+    tags: ['v*.*.*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Tag must match package.json version
+        run: |
+          version="v$(node -p "require('./package.json').version")"
+          if [ "$GITHUB_REF_NAME" != "$version" ] && [[ "$GITHUB_REF_NAME" != "$version-"* ]]; then
+            echo "Tag $GITHUB_REF_NAME does not match package.json version $version" >&2
+            exit 1
+          fi
+      - run: pnpm lint && pnpm typecheck && pnpm test
+      - run: pnpm zip
+      - name: Create GitHub Release with the zips
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          flags=()
+          if [[ "$GITHUB_REF_NAME" == *-* ]]; then
+            flags+=(--prerelease)
+            {
+              echo "Bản thử nghiệm — chưa nộp store."
+              echo
+              echo "## Cài thử"
+              echo
+              echo "1. Tải \`*-chrome.zip\` (Chrome) hoặc \`*-edge.zip\` (Edge) bên dưới và giải nén."
+              echo "2. Mở \`chrome://extensions\` (hoặc \`edge://extensions\`), bật **Developer mode**."
+              echo "3. Bấm **Load unpacked**, chọn thư mục vừa giải nén."
+              echo "4. Bấm icon extension trên thanh công cụ để mở trang quản lý."
+              echo
+              cat CHANGELOG.md
+            } > release-notes.md
+          else
+            cp CHANGELOG.md release-notes.md
+          fi
+          gh release create "$GITHUB_REF_NAME" .output/*.zip --title "$GITHUB_REF_NAME" \
+            --notes-file release-notes.md --verify-tag "${flags[@]}"

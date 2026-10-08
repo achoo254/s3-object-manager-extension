@@ -1,0 +1,136 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  forbidden-terms:
+    name: forbidden terms
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check tracked files and paths
+        env:
+          FORBIDDEN_TERMS_REGEX: ${{ secrets.FORBIDDEN_TERMS_REGEX }}
+        run: scripts/check-forbidden-terms.sh files
+      - name: Check commit messages of this push / pull request
+        env:
+          FORBIDDEN_TERMS_REGEX: ${{ secrets.FORBIDDEN_TERMS_REGEX }}
+          EVENT: ${{ github.event_name }}
+          PR_BASE: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD: ${{ github.event.pull_request.head.sha }}
+          PUSH_BEFORE: ${{ github.event.before }}
+          PUSH_AFTER: ${{ github.sha }}
+        run: |
+          if [ "$EVENT" = "pull_request" ]; then
+            range="$PR_BASE..$PR_HEAD"
+          elif [ -n "$PUSH_BEFORE" ] && ! [[ "$PUSH_BEFORE" =~ ^0+$ ]] && git cat-file -e "$PUSH_BEFORE" 2>/dev/null; then
+            range="$PUSH_BEFORE..$PUSH_AFTER"
+          else
+            # New branch or rewritten history: check everything reachable from the pushed commit.
+            range="$PUSH_AFTER"
+          fi
+          scripts/check-forbidden-terms.sh commits "$range"
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm format:check
+      - run: pnpm check:i18n
+
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Unit tests
+        run: pnpm test
+      - name: Start local S3 server (SeaweedFS)
+        run: |
+          docker compose up -d
+          for i in $(seq 1 60); do curl -s -o /dev/null http://localhost:8333/ && exit 0; sleep 1; done
+          docker compose logs; exit 1
+      - name: Provider checks against SeaweedFS
+        env:
+          S3_TEST_ENDPOINT: http://localhost:8333
+        run: pnpm test:integration
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: extension-zips
+          path: .output/*.zip
+          if-no-files-found: error
+
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium
+      - name: Start local S3 server (SeaweedFS)
+        run: |
+          docker compose up -d
+          for i in $(seq 1 60); do curl -s -o /dev/null http://localhost:8333/ && exit 0; sleep 1; done
+          docker compose logs; exit 1
+      - run: pnpm build:e2e
+      - run: pnpm test:e2e
+        env:
+          CI: 'true'
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/

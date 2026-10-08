@@ -1,0 +1,14 @@
+node_modules/
+.output/
+.wxt/
+dist/
+coverage/
+test-results/
+playwright-report/
+*.log
+.DS_Store
+
+# Real environment files never get committed; only the example with variable names.
+.env
+.env.*
+!.env.example

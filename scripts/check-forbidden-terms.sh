@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+# Fails when tracked files, file paths or commit messages match FORBIDDEN_TERMS_REGEX.
+# The term list is kept outside the repository (CI secret / local environment variable):
+# writing it down here would itself break the rule.
+#
+#   check-forbidden-terms.sh files              tracked files and their paths
+#   check-forbidden-terms.sh staged             staged files and their paths (pre-commit)
+#   check-forbidden-terms.sh commits <range>    commit messages in a git range
+#   check-forbidden-terms.sh message <file>     one commit message (commit-msg hook)
+#
+# Output names no matched text unless VERBOSE=1, so public CI logs never reveal the terms.
+set -euo pipefail
+
+regex="${FORBIDDEN_TERMS_REGEX:-}"
+# An empty pattern matches every line, so refuse to run rather than silently pass or fail.
+if [[ -z "${regex//[[:space:]]/}" ]]; then
+  echo "FORBIDDEN_TERMS_REGEX is missing or empty: the forbidden-terms check cannot run." >&2
+  echo "Set it as a repository secret (CI) or an environment variable (local hooks)." >&2
+  exit 2
+fi
+
+mode="${1:-}"
+verbose="${VERBOSE:-0}"
+found=0
+
+# $1 = what was checked, $2 = matching lines (printed only when verbose)
+report() {
+  local count=0
+  if [[ -n "$2" ]]; then count="$(printf '%s\n' "$2" | wc -l | tr -d ' ')"; fi
+  if [[ "$count" -gt 0 ]]; then
+    found=1
+    echo "Forbidden terms found in $1: $count hit(s)." >&2
+    if [[ "$verbose" == "1" ]]; then printf '%s\n' "$2" >&2; fi
+  fi
+}
+
+case "$mode" in
+  files)
+    report "tracked files" "$(git grep -I -i -n -E -e "$regex" -- . || true)"
+    report "file paths" "$(git ls-files | grep -i -E -e "$regex" || true)"
+    ;;
+  staged)
+    report "staged files" "$(git grep --cached -I -i -n -E -e "$regex" -- . || true)"
+    report "staged file paths" \
+      "$(git diff --cached --name-only --diff-filter=ACMR | grep -i -E -e "$regex" || true)"
+    ;;
+  commits)
+    range="${2:?commit range required}"
+    report "commit messages ($range)" "$(git log --format=%B "$range" | grep -i -E -e "$regex" || true)"
+    ;;
+  message)
+    file="${2:?message file required}"
+    report "the commit message" "$(grep -v '^#' "$file" | grep -i -E -e "$regex" || true)"
+    ;;
+  *)
+    echo "usage: $0 files | staged | commits <range> | message <file>" >&2
+    exit 2
+    ;;
+esac
+
+exit "$found"
