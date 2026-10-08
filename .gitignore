@@ -12,3 +12,8 @@ playwright-report/
 .env
 .env.*
 !.env.example
+
+# Local agent tooling output (reports, journals, agent memory) stays on the machine.
+plans/*/reports/
+plans/*/journals/
+.claude/
