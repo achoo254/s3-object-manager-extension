@@ -304,7 +304,7 @@
     },
     "network": {
       "title": "Cannot reach the endpoint",
-      "action": "Check the endpoint address, your network, and that the extension was granted access to the site."
+      "action": "Check the endpoint address and your network. If the endpoint is on an internal network, this machine must be able to reach it (for example through a VPN). Also check that the extension was granted access to the site."
     },
     "proxyBlocked": {
       "title": "Blocked before reaching the S3 server",

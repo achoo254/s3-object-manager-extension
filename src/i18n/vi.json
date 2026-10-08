@@ -304,7 +304,7 @@
     },
     "network": {
       "title": "Không tới được endpoint",
-      "action": "Kiểm tra địa chỉ endpoint, kết nối mạng, và xem đã cấp quyền truy cập trang cho extension chưa."
+      "action": "Kiểm tra địa chỉ endpoint và kết nối mạng. Nếu endpoint nằm trong mạng nội bộ, máy này phải vào được mạng đó (ví dụ bật VPN). Xem thêm extension đã được cấp quyền truy cập trang chưa."
     },
     "proxyBlocked": {
       "title": "Yêu cầu bị chặn trước khi tới server S3",

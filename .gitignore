@@ -17,3 +17,6 @@ playwright-report/
 plans/*/reports/
 plans/*/journals/
 .claude/
+
+# Local drop folder of a desktop tool; may hold credential files.
+.orca/
