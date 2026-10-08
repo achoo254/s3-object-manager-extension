@@ -1,6 +1,6 @@
 # Phase 4 — Upload multipart tiếp tục được
 
-Tier: **M** · Phụ thuộc: phase 2 · Song song được với phase 3 · Trạng thái: chưa làm · Issue: #4
+Tier: **M** · Phụ thuộc: phase 2 · Song song được với phase 3 · Trạng thái: xong (trừ ngưỡng thông lượng, xem phase 6) · Issue: #4
 
 ## Mục tiêu
 
@@ -40,6 +40,13 @@ tiếp tục được sau khi mất mạng, đóng tab hoặc khởi động l�
 - Trên SeaweedFS: upload 2 GB, tắt mạng ở ~40%, bật lại, chọn lại file ⟹ chỉ gửi phần còn thiếu, ETag cuối khớp.
 - Trên SeaweedFS: upload 5 GB, đỉnh RAM tab ≤ 4 × 8 MiB + 50 MB.
 - Thông lượng ≥ 80% `aws s3 cp` (đo ở phase 6).
+
+## Kết quả (08/10/2026)
+
+- Unit `part-planner` và `multipart-uploader` đúng các ca trong mục Kiểm; thêm ca Complete bị mất phản hồi.
+- Tích hợp SeaweedFS: upload 40 MiB bị ngắt sau 2 part, tiếp tục chỉ gửi part còn thiếu, nội dung tải về khớp từng byte.
+- Upload 5 GB: RAM renderer +0 MiB (ngưỡng 82 MiB).
+- Khoá vault tạm dừng mọi upload; hàng đợi không giữ S3 client, lấy credentials mới lúc chạy; không xếp trùng cùng file vào cùng key.
 
 ## Rủi ro
 

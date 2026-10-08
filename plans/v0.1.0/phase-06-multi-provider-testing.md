@@ -1,6 +1,6 @@
 # Phase 6 — Kiểm thử đa nhà cung cấp và đo performance
 
-Tier: **M** · Phụ thuộc: phase 3, 4, 5 · Trạng thái: chưa làm · Issue: #6
+Tier: **M** · Phụ thuộc: phase 3, 4, 5 · Trạng thái: một phần · Issue: #6
 
 ## Mục tiêu
 
@@ -50,6 +50,12 @@ Ngưỡng không đạt ⟹ nêu nguyên nhân khả dĩ và đề xuất, khôn
 - Job e2e xanh trên CI.
 - Ma trận đủ ba nhà cung cấp, mọi ô có kết quả.
 - Báo cáo đo có đủ năm đại lượng.
+
+## Kết quả (08/10/2026)
+
+- E2E Playwright đủ kịch bản, đạt trên SeaweedFS 4.47; job `e2e` trong CI dùng `docker compose`.
+- Ma trận: SeaweedFS đạt mọi ô (docs/compatibility.md). MinIO, Ceph RGW, Backblaze B2 chưa kiểm — cần tài nguyên ngoài phiên; chạy `pnpm test:integration` với biến `S3_TEST_*`.
+- Đo performance (docs/performance.md, `pnpm perf`): 4/5 đạt trên SeaweedFS; **thông lượng upload 57% của `aws s3 cp` < 80%** — đã nêu nguyên nhân và đề xuất, không hạ ngưỡng. Chưa đo trên Ceph RGW.
 
 ## Rủi ro
 

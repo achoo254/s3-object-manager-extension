@@ -1,6 +1,6 @@
 # Phase 3 — Duyệt và thao tác object, download, chia sẻ link
 
-Tier: **M** · Phụ thuộc: phase 2 · Song song được với phase 4 · Trạng thái: chưa làm · Issue: #3
+Tier: **M** · Phụ thuộc: phase 2 · Song song được với phase 4 · Trạng thái: xong · Issue: #3
 
 ## Mục tiêu
 
@@ -48,6 +48,13 @@ lớn không chiếm RAM; tạo link chia sẻ có thời hạn trong một cú 
 - Trên SeaweedFS: tạo 100.000 object trong một prefix bằng script, mở thư mục ⟹ trang đầu hiện sau 1 request, cuộn mượt.
 - Download file 5 GB ⟹ RAM tab không tăng theo cỡ file (Chrome Task Manager).
 - Link chia sẻ mở được trong cửa sổ ẩn danh (không có extension).
+
+## Kết quả (08/10/2026)
+
+- Unit: 2.500 key ⟹ 3 lô; 6 GiB ⟹ `UploadPartCopy` 768 part; chặn chuyển thư mục chồng lấn nguồn/đích.
+- 100.000 object: trang đầu 1 request, 0 long task khi cuộn; xoá 10.000 object = 10 `DeleteObjects` (docs/performance.md).
+- Download 5 GB: RAM renderer +5 MiB. Link presign tải được từ ngữ cảnh không có extension (e2e).
+- Sau khi xoá/chuyển thư mục, xoá thêm key thư mục từ sâu ra nông (SeaweedFS giữ thư mục rỗng; không xoá đệ quy — đã có test tích hợp khoá hành vi).
 
 ## Rủi ro
 

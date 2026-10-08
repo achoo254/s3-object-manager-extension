@@ -1,7 +1,7 @@
 ---
 title: "Extension trình duyệt quản lý object trên mọi endpoint tương thích S3"
 description: "Extension Chrome/Edge (MV3) duyệt, upload, download, xoá, đổi tên và chia sẻ object trên bất kỳ endpoint S3 nào chỉ với endpoint + credentials, giao diện tiếng Việt là chính."
-status: pending
+status: in-progress
 priority: P2
 effort: M
 branch: main
@@ -13,7 +13,7 @@ created: 2026-10-08
 
 # MVP v0.1.0 — extension quản lý object S3
 
-Trạng thái: chưa làm · Tạo 08/10/2026 · Tier tổng: **M** (~7 module)
+Trạng thái: đang làm (mã phase 1–5 xong, phase 6 một phần, phase 7 chờ tài khoản store) · Tạo 08/10/2026 · Tier tổng: **M** (~7 module)
 
 Danh sách việc: milestone `v0.1.0`, issue theo dõi **#8**, mỗi phase một issue (#1–#7).
 
@@ -121,6 +121,18 @@ Playwright**. Phiên bản chốt cứng lúc scaffold, chọn bản phát hành
 | 7 | Phát hành Chrome Web Store + Edge Add-ons | S | 6 | [phase-07](phase-07-store-release.md) | #7 |
 
 Phase 3 và 4 làm song song được (tệp tách biệt: `src/features/browser/**` vs `src/features/upload/**`).
+
+## Tiến độ (08/10/2026)
+
+| # | Trạng thái | Còn lại |
+|---|---|---|
+| 1 | Xong mã + CI | Đặt secret `FORBIDDEN_TERMS_REGEX`, bật secret scanning/push protection, chạy `scripts/install-git-hooks.sh`, chứng thực dương trên nhánh thử; CI xanh trên GitHub chưa chạy (chưa push) |
+| 2 | Xong | Kiểm tay hộp thoại cấp quyền thật (bản e2e cấp sẵn `http://localhost`) |
+| 3 | Xong | — |
+| 4 | Xong | Kiểm tay tắt mạng giữa chừng trong trình duyệt thật (logic tiếp tục đã kiểm bằng test tích hợp) |
+| 5 | Xong | Đi tay hết màn hình với trình duyệt tiếng Việt (đã soát bằng ảnh chụp) |
+| 6 | Một phần | E2E + SeaweedFS đạt; MinIO/Ceph RGW/B2 chưa kiểm; thông lượng upload 57% < 80% (docs/performance.md) |
+| 7 | Chuẩn bị xong | Chốt tên, đăng trang privacy (GitHub Pages), tài khoản store + 2FA, tag `v0.1.0`, nộp hai store |
 
 ## Rủi ro chính
 
