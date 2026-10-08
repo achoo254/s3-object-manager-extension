@@ -53,9 +53,8 @@ describe('createS3Client', () => {
 
   it('sets forcePathStyle from the profile addressing', () => {
     expect(createS3Client(baseProfile).config.forcePathStyle).toBe(true);
-    expect(createS3Client({ ...baseProfile, addressing: 'virtual' }).config.forcePathStyle).toBe(
-      false,
-    );
+    const remote = { ...baseProfile, endpoint: 'https://s3.example.test' };
+    expect(createS3Client({ ...remote, addressing: 'virtual' }).config.forcePathStyle).toBe(false);
   });
 
   it('sends DeleteObjects with Content-MD5 and without any x-amz-checksum header', async () => {
@@ -107,5 +106,18 @@ describe('createS3Client', () => {
       { requestHandler: virtual.handler as never },
     ).send(new DeleteObjectsCommand({ Bucket: 'bucket', Delete: { Objects: [{ Key: 'a' }] } }));
     expect(virtual.captured[0]?.hostname).toBe('bucket.s3.example.test');
+  });
+});
+
+describe('addressing fallback', () => {
+  it('uses path-style for localhost and IP endpoints even when virtual-hosted is chosen', () => {
+    for (const endpoint of ['http://localhost:9000', 'http://127.0.0.1:8333', 'https://10.0.0.5']) {
+      const client = createS3Client({ ...baseProfile, endpoint, addressing: 'virtual' });
+      expect(client.config.forcePathStyle).toBe(true);
+    }
+    expect(
+      createS3Client({ ...baseProfile, endpoint: 'https://s3.example.test', addressing: 'virtual' })
+        .config.forcePathStyle,
+    ).toBe(false);
   });
 });

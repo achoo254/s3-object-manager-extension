@@ -78,7 +78,8 @@
       "secretAccessKey": "Secret access key",
       "sessionToken": "Session token (optional)",
       "scopedKeyAdvice": "Prefer a key limited to the buckets you manage, not an account-wide admin key.",
-      "permissionNote": "When you save or test, the browser asks for access to {pattern}. The extension only sends requests to this address."
+      "permissionNote": "When you save or test, the browser asks for access to {pattern}. The extension only sends requests to this address.",
+      "virtualUnavailable": "localhost and IP addresses only work with path-style."
     },
     "test": {
       "button": "Test connection",

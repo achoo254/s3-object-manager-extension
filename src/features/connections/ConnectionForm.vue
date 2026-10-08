@@ -3,6 +3,7 @@ import { mdiEye, mdiEyeOff } from '@mdi/js';
 import { computed, reactive, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { hostPatternFor, requestHostPermission } from '@/core/profiles/host-permission';
+import { effectiveAddressing } from '@/core/profiles/addressing';
 import { normalizeEndpoint, suggestAddressing } from '@/core/profiles/profile-store';
 import {
   DEFAULT_REGION,
@@ -93,6 +94,18 @@ const draft = computed<ProfileInput | undefined>(() => {
   };
 });
 
+/** Virtual-hosted needs `<bucket>.<host>`, which `localhost` and IP addresses cannot provide. */
+const virtualUnavailable = computed(() => {
+  const check = endpointCheck.value;
+  return (
+    'endpoint' in check &&
+    effectiveAddressing({ endpoint: check.endpoint, addressing: 'virtual' }) === 'path'
+  );
+});
+watch(virtualUnavailable, (unavailable) => {
+  if (unavailable) form.addressing = 'path';
+});
+
 const hostPattern = computed(() => (draft.value ? hostPatternFor(draft.value) : ''));
 
 /**
@@ -174,11 +187,17 @@ async function save() {
           <v-radio-group
             v-model="form.addressing"
             :label="t('connections.form.addressing')"
+            :hint="virtualUnavailable ? t('connections.form.virtualUnavailable') : undefined"
+            :persistent-hint="virtualUnavailable"
             inline
             @update:model-value="addressingTouched = true"
           >
             <v-radio :label="t('connections.form.addressingPath')" value="path" />
-            <v-radio :label="t('connections.form.addressingVirtual')" value="virtual" />
+            <v-radio
+              :label="t('connections.form.addressingVirtual')"
+              value="virtual"
+              :disabled="virtualUnavailable"
+            />
           </v-radio-group>
           <v-text-field
             v-model="form.accessKeyId"

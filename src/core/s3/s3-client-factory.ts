@@ -1,4 +1,5 @@
 import { S3Client } from '@aws-sdk/client-s3';
+import { effectiveAddressing } from '@/core/profiles/addressing';
 import type { ConnectionProfile } from '@/core/profiles/profile.types';
 import {
   deleteObjectsMd5Middleware,
@@ -21,7 +22,7 @@ export function createS3Client(
   const client = new S3Client({
     endpoint: profile.endpoint,
     region: profile.region,
-    forcePathStyle: profile.addressing === 'path',
+    forcePathStyle: effectiveAddressing(profile) === 'path',
     credentials: {
       accessKeyId: profile.accessKeyId,
       secretAccessKey: profile.secretAccessKey,

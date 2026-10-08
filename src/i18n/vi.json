@@ -78,7 +78,8 @@
       "secretAccessKey": "Secret access key",
       "sessionToken": "Session token (tuỳ chọn)",
       "scopedKeyAdvice": "Nên dùng khoá chỉ có quyền trên những bucket cần quản lý, không dùng khoá quản trị toàn tài khoản.",
-      "permissionNote": "Khi lưu hoặc kiểm tra, trình duyệt sẽ hỏi quyền truy cập {pattern}. Extension chỉ gửi yêu cầu tới địa chỉ này."
+      "permissionNote": "Khi lưu hoặc kiểm tra, trình duyệt sẽ hỏi quyền truy cập {pattern}. Extension chỉ gửi yêu cầu tới địa chỉ này.",
+      "virtualUnavailable": "localhost và địa chỉ IP chỉ dùng được path-style."
     },
     "test": {
       "button": "Kiểm tra kết nối",

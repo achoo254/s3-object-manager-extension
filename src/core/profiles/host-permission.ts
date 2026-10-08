@@ -1,16 +1,8 @@
 import { browser } from 'wxt/browser';
+import { effectiveAddressing } from './addressing';
 import type { ConnectionProfile } from './profile.types';
 
 type EndpointShape = Pick<ConnectionProfile, 'endpoint' | 'addressing'>;
-
-/** Hosts that cannot take a `*.` wildcard (and have no `<bucket>.` subdomains anyway). */
-function isLocalOrIp(hostname: string): boolean {
-  return (
-    hostname === 'localhost' ||
-    /^\d{1,3}(\.\d{1,3}){3}$/.test(hostname) ||
-    (hostname.startsWith('[') && hostname.endsWith(']'))
-  );
-}
 
 /**
  * Host match pattern a profile needs. Virtual-hosted addressing sends requests to
@@ -19,7 +11,7 @@ function isLocalOrIp(hostname: string): boolean {
  */
 export function hostPatternFor(profile: EndpointShape): string {
   const url = new URL(profile.endpoint);
-  const wildcard = profile.addressing === 'virtual' && !isLocalOrIp(url.hostname);
+  const wildcard = effectiveAddressing(profile) === 'virtual';
   return `${url.protocol}//${wildcard ? `*.${url.hostname}` : url.hostname}/*`;
 }
 
