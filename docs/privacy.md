@@ -4,7 +4,7 @@ title: Chính sách quyền riêng tư / Privacy policy
 
 # Chính sách quyền riêng tư
 
-Cập nhật: 09/10/2026 · Áp dụng cho extension trình duyệt "Kho Mây".
+Cập nhật: 09/10/2026 · Áp dụng cho extension trình duyệt "S3 Object Manager".
 
 - **Credentials chỉ nằm trên máy bạn.** Endpoint, access key và secret key bạn nhập được lưu trong bộ
   nhớ cục bộ của trình duyệt, mã hoá bằng một khoá ngẫu nhiên cũng nằm trên máy. Không cần mật khẩu,
@@ -26,7 +26,7 @@ Gỡ extension sẽ xoá toàn bộ dữ liệu nó lưu trên máy.
 
 # Privacy policy
 
-Last updated: 9 October 2026 · Applies to the "Kho Mây" browser extension.
+Last updated: 9 October 2026 · Applies to the "S3 Object Manager" browser extension.
 
 - **Your credentials stay on your machine.** The endpoints, access keys and secret keys you enter are
   kept in the browser's local storage, encrypted with a random key that is also stored on the

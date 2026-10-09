@@ -133,7 +133,7 @@ Phase 3 và 4 làm song song được (tệp tách biệt: `src/features/browser
 | 4 | Xong | Kiểm tay tắt mạng giữa chừng trong trình duyệt thật (logic tiếp tục đã có test tích hợp trên 3 server) |
 | 5 | Xong | — |
 | 6 | Gần xong | SeaweedFS, MinIO, Ceph RGW (path-style) đạt mọi ô; Backblaze B2 chờ tài khoản của chủ dự án; số đo qua mạng thật trên Ceph ở docs/performance.md |
-| 7 | Chuẩn bị xong | Tên **Kho Mây**; trang privacy trên GitHub Pages; còn tài khoản store + 2FA, tag `v0.1.0`, nộp hai store |
+| 7 | Chuẩn bị xong | Tên **S3 Object Manager**; trang privacy trên GitHub Pages; còn tài khoản store + 2FA, tag `v0.1.0`, nộp hai store |
 
 ## Rủi ro chính
 
@@ -148,7 +148,7 @@ Phase 3 và 4 làm song song được (tệp tách biệt: `src/features/browser
 
 ## Câu hỏi còn mở
 
-- ~~Tên extension trên store~~ — chốt **Kho Mây** (09/10/2026): dễ hiểu với người dùng phổ thông, không chứa nhãn hiệu bên khác.
+- ~~Tên extension trên store~~ — chốt **S3 Object Manager** (09/10/2026): người dùng quen S3 muốn thuật ngữ gốc (bucket, object); không trùng extension nào trên store, ít bị nhầm với sản phẩm có sẵn hơn tên dạng "S3 Browser".
 
 ## Nhật ký quyết định
 

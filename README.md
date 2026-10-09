@@ -1,4 +1,4 @@
-# Kho Mây
+# S3 Object Manager
 
 Extension Chrome/Edge (Manifest V3) để duyệt, tải lên, tải xuống, xoá, đổi tên và chia sẻ object trên
 dịch vụ lưu trữ tương thích S3 — chỉ cần endpoint và cặp khoá truy cập. Giao diện tiếng Việt là chính,

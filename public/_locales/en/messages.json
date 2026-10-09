@@ -1,10 +1,10 @@
 {
   "extName": {
-    "message": "Kho Mây",
+    "message": "S3 Object Manager",
     "description": "Extension name"
   },
   "extDescription": {
-    "message": "Browse, upload, download and share files on S3-compatible cloud storage. Easy to use, nothing to install, connections stay on your machine.",
+    "message": "Browse, upload, download and share objects on any S3-compatible storage. Nothing to install, connections stay on your machine.",
     "description": "Store description of the extension"
   }
 }

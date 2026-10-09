@@ -1,15 +1,16 @@
 # Nội dung nộp store (Chrome Web Store, Edge Add-ons)
 
-Bản nháp để dán khi nộp tay. Tên extension: **Kho Mây** (chốt 09/10/2026), nằm ở
-`public/_locales/{vi,en}/messages.json` và `src/i18n/{vi,en}.json` (`app.title`). Tên không chứa nhãn
-hiệu của bên khác; "S3" chỉ xuất hiện trong mô tả dưới dạng "tương thích S3".
+Bản nháp để dán khi nộp tay. Tên extension: **S3 Object Manager** (chốt 09/10/2026), nằm ở
+`public/_locales/{vi,en}/messages.json` và `src/i18n/{vi,en}.json` (`app.title`). Người dùng mục tiêu
+đã quen thuật ngữ S3 (bucket, object), nên tên và giao diện giữ các thuật ngữ đó. Tên dùng "S3" theo
+nghĩa mô tả; không dùng logo hay nhận diện của Amazon và không ghi là sản phẩm của Amazon.
 
 ## Mô tả ngắn
 
 Lấy từ `extDescription` trong `public/_locales/{vi,en}/messages.json`:
 
-- vi: Duyệt, tải lên, tải xuống và chia sẻ tệp trên kho lưu trữ đám mây tương thích S3. Dễ dùng, không cần cài phần mềm, kết nối chỉ lưu trên máy bạn.
-- en: Browse, upload, download and share files on S3-compatible cloud storage. Easy to use, nothing to install, connections stay on your machine.
+- vi: Duyệt, tải lên, tải xuống và chia sẻ object trên mọi dịch vụ lưu trữ tương thích S3. Không cần cài phần mềm, kết nối chỉ lưu trên máy bạn.
+- en: Browse, upload, download and share objects on any S3-compatible storage. Nothing to install, connections stay on your machine.
 
 ## Mô tả dài (vi)
 
@@ -17,15 +18,16 @@ Quản lý object trên dịch vụ lưu trữ tương thích S3 ngay trong trì
 
 - Giao diện tiếng Việt; lỗi S3 được dịch thành câu nói rõ chuyện gì xảy ra và cần làm gì.
 - Duyệt bucket và thư mục hàng trăm nghìn object, lọc theo tên.
-- Tải lên file lớn theo từng phần, tạm dừng và tiếp tục được, kể cả sau khi đóng trình duyệt.
+- Tải lên object lớn (nhiều GB) theo từng phần, tạm dừng và tiếp tục được, kể cả sau khi đóng trình
+  duyệt.
 - Tải xuống qua trình tải của trình duyệt; đổi tên, sao chép, xoá, tạo thư mục.
 - Tạo link chia sẻ có thời hạn (1 giờ, 1 ngày, 7 ngày).
 - Lưu kết nối xong là dùng ngay, không cần mật khẩu; kết nối chỉ nằm trên máy của bạn.
 - Extension chỉ kết nối tới endpoint bạn nhập, sau khi bạn cho phép. Không telemetry, không tài
   khoản, mã nguồn mở MIT.
 
-Tương thích với dịch vụ lưu trữ chuẩn S3. Đã kiểm: xem `docs/compatibility.md` (chỉ liệt kê nhà cung
-cấp đã có trong ma trận).
+Tương thích với dịch vụ lưu trữ chuẩn S3. Đã kiểm trên SeaweedFS, MinIO và Ceph RGW (chi tiết:
+`docs/compatibility.md`; chỉ liệt kê nhà cung cấp đã có trong ma trận).
 
 ## Long description (en)
 
@@ -40,7 +42,8 @@ Manage objects on S3-compatible storage right in your browser, nothing to instal
 - Connects only to the endpoints you enter, after you allow it. No telemetry, no account, MIT open
   source.
 
-Compatible with S3-standard storage services. Tested providers: see `docs/compatibility.md`.
+Compatible with S3-standard storage services. Tested on SeaweedFS, MinIO and Ceph RGW (details in
+`docs/compatibility.md`).
 
 ## Khai báo dữ liệu (Privacy practices)
 

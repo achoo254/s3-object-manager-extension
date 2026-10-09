@@ -49,7 +49,7 @@ trình đóng gói lặp lại được từ tag git.
 
 ## Cập nhật 09/10/2026
 
-- Tên: **Kho Mây**. Trang privacy: https://achoo254.github.io/s3-object-manager-extension/privacy (GitHub Pages từ `docs/`).
+- Tên: **S3 Object Manager** (thay "Kho Mây" cùng ngày: người dùng quen thuật ngữ S3 muốn giữ "object" và tên dạng S3). Trang privacy: https://achoo254.github.io/s3-object-manager-extension/privacy (GitHub Pages từ `docs/`).
 - Ảnh store chụp lại với tên mới; secret scanning + push protection đã bật.
 - Còn lại (cần chủ dự án): tài khoản Chrome Web Store + Edge Partner Center (2FA), tag `v0.1.0`, nộp, xử lý review.
 
