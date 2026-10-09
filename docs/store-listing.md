@@ -47,7 +47,7 @@ Compatible with S3-standard storage services. Tested providers: see `docs/compat
 - Loại dữ liệu: **Thông tin xác thực** (credentials của endpoint S3). Lưu cục bộ trên máy, **không**
   truyền cho bên thứ ba, không dùng cho mục đích nào ngoài chức năng chính.
 - Không thu thập: thông tin cá nhân, lịch sử duyệt web, vị trí, nội dung trang web.
-- Chính sách quyền riêng tư: `docs/privacy.md` (đăng qua GitHub Pages).
+- Chính sách quyền riêng tư: https://achoo254.github.io/s3-object-manager-extension/privacy (nguồn `docs/privacy.md`, GitHub Pages).
 - Không dùng mã tải từ xa (remote code).
 
 ## Giải thích từng quyền
