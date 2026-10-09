@@ -95,14 +95,6 @@ for (const lang of ['vi', 'en'] as const) {
       await page.screenshot({ path: join(outDir, `${lang}-${name}.png`) });
     };
 
-    await page.getByTestId('vault-passphrase').locator('input').fill('a long demo passphrase');
-    await page
-      .getByTestId('vault-passphrase-confirm')
-      .locator('input')
-      .fill('a long demo passphrase');
-    await shot('1-passphrase');
-    await page.getByTestId('vault-create').click();
-
     await page.getByTestId('profile-add').click();
     await page.getByTestId('profile-name').locator('input').fill(copy[lang].profile);
     await page.getByTestId('profile-endpoint').locator('input').fill(endpoint);

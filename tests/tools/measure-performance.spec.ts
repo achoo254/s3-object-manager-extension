@@ -161,17 +161,14 @@ async function launch(): Promise<{ context: BrowserContext; page: Page; browserP
 }
 
 async function openBucket(page: Page, bucket: string) {
-  await page.getByTestId('vault-passphrase').locator('input').fill('perf passphrase');
-  await page.getByTestId('vault-passphrase-confirm').locator('input').fill('perf passphrase');
-  await page.getByTestId('vault-create').click();
   await expect(page.getByTestId('profile-add')).toBeVisible();
   const concurrency = process.env.PERF_CONCURRENCY;
   if (concurrency) {
-    // Settings are read when the page loads; the vault stays unlocked across the reload.
+    // Settings are read when the page loads; saved connections survive the reload.
     await page.evaluate(
       (value) =>
         chrome.storage.local.set({
-          settings: { theme: 'system', autoLockMinutes: 30, uploadConcurrency: value },
+          settings: { theme: 'system', uploadConcurrency: value },
         }),
       Number(concurrency),
     );

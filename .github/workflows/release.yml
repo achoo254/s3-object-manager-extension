@@ -29,7 +29,12 @@ jobs:
             exit 1
           fi
       - run: pnpm lint && pnpm typecheck && pnpm test
-      - run: pnpm zip
+      - name: Build zips
+        # Pre-releases get a fixed extension ID so testers keep their saved connections when
+        # updating; store releases must not carry a manifest key.
+        run: |
+          if [[ "$GITHUB_REF_NAME" == *-* ]]; then export PRERELEASE_BUILD=1; fi
+          pnpm zip
       - name: Create GitHub Release with the zips
         env:
           GH_TOKEN: ${{ github.token }}
@@ -40,12 +45,19 @@ jobs:
             {
               echo "Bản thử nghiệm — chưa nộp store."
               echo
-              echo "## Cài thử"
+              echo "## Cài lần đầu"
               echo
-              echo "1. Tải \`*-chrome.zip\` (Chrome) hoặc \`*-edge.zip\` (Edge) bên dưới và giải nén."
+              echo "1. Tải \`*-chrome.zip\` (Chrome) hoặc \`*-edge.zip\` (Edge) bên dưới và giải nén vào một thư mục cố định."
               echo "2. Mở \`chrome://extensions\` (hoặc \`edge://extensions\`), bật **Developer mode**."
               echo "3. Bấm **Load unpacked**, chọn thư mục vừa giải nén."
               echo "4. Bấm icon extension trên thanh công cụ để mở trang quản lý."
+              echo
+              echo "## Cập nhật (giữ nguyên các kết nối đã lưu)"
+              echo
+              echo "1. Giải nén bản mới **đè vào đúng thư mục cũ**."
+              echo "2. Trong trang extensions, bấm **Reload** (biểu tượng mũi tên tròn) trên thẻ extension."
+              echo
+              echo "**Không bấm Remove (gỡ)** — gỡ extension sẽ xoá các kết nối đã lưu."
               echo
               cat CHANGELOG.md
             } > release-notes.md

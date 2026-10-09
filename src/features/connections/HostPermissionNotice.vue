@@ -4,18 +4,18 @@ import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { hostPatternFor, requestHostPermission } from '@/core/profiles/host-permission';
 import type { ConnectionProfile } from '@/core/profiles/profile.types';
-import { useVault } from './use-vault';
+import { useConnections } from './use-connections';
 
 const props = defineProps<{ profile: ConnectionProfile }>();
 const { t } = useI18n();
-const vault = useVault();
+const connections = useConnections();
 const denied = ref(false);
 const pattern = computed(() => hostPatternFor(props.profile));
 
 async function grant() {
   const granted = await requestHostPermission(props.profile);
   denied.value = !granted;
-  await vault.refreshHostAccess();
+  await connections.refreshHostAccess();
 }
 </script>
 

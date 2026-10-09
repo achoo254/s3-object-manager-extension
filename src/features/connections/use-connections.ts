@@ -4,7 +4,6 @@ import { browser } from 'wxt/browser';
 import {
   hasHostPermission,
   hostPatternFor,
-  releaseAllHostPermissions,
   releaseHostPermission,
 } from '@/core/profiles/host-permission';
 import {
@@ -16,20 +15,9 @@ import {
 import type { ConnectionProfile, ProfileInput } from '@/core/profiles/profile.types';
 import { resetCapabilities } from '@/core/s3/capabilities';
 import { createS3Client } from '@/core/s3/s3-client-factory';
-import { recordActivity } from '@/core/vault/auto-lock';
-import {
-  createVault,
-  destroyVault,
-  hasVault,
-  isUnlocked,
-  lockVault,
-  SESSION_KEY_STORAGE_KEY,
-  unlockVault,
-} from '@/core/vault/vault-store';
+import { CONNECTION_STORAGE_KEYS } from '@/core/storage/connection-storage';
 
-export type VaultStatus = 'loading' | 'absent' | 'locked' | 'unlocked';
-
-const status = ref<VaultStatus>('loading');
+const ready = ref(false);
 const profiles = ref<ConnectionProfile[]>([]);
 const activeProfileId = ref<string>();
 /** Origin access per profile id; `undefined` until checked. */
@@ -40,37 +28,19 @@ const activeProfile = computed(() =>
   profiles.value.find((profile) => profile.id === activeProfileId.value),
 );
 
-function forgetSecrets(): void {
-  profiles.value = [];
-  activeProfileId.value = undefined;
-  hostAccess.value = {};
-  clients.clear();
-  resetCapabilities();
-}
-
 let refreshGeneration = 0;
 
-/** Re-reads the vault state; an older refresh finishing late never overwrites a newer one. */
+/** Re-reads saved connections; an older refresh finishing late never overwrites a newer one. */
 async function refresh(): Promise<void> {
   const current = ++refreshGeneration;
-  const exists = await hasVault();
-  const unlocked = exists && (await isUnlocked());
-  const list = unlocked ? await listProfiles().catch(() => undefined) : undefined;
+  const list = await listProfiles();
   if (current !== refreshGeneration) return;
-  if (!exists) {
-    forgetSecrets();
-    status.value = 'absent';
-  } else if (!unlocked || !list) {
-    forgetSecrets();
-    status.value = 'locked';
-  } else {
-    profiles.value = list;
-    if (!profiles.value.some((profile) => profile.id === activeProfileId.value)) {
-      activeProfileId.value = undefined;
-    }
-    status.value = 'unlocked';
-    await refreshHostAccess();
+  profiles.value = list;
+  if (!list.some((profile) => profile.id === activeProfileId.value)) {
+    activeProfileId.value = undefined;
   }
+  ready.value = true;
+  await refreshHostAccess();
 }
 
 async function refreshHostAccess(): Promise<void> {
@@ -84,12 +54,9 @@ let watching = false;
 function watchStorage(): void {
   if (watching) return;
   watching = true;
-  // Another tab (or the auto-lock) may lock, unlock or edit the vault.
+  // Another manager tab may add, edit or delete connections.
   browser.storage.onChanged.addListener((changes, area) => {
-    if (
-      (area === 'session' && SESSION_KEY_STORAGE_KEY in changes) ||
-      (area === 'local' && 'vault' in changes)
-    ) {
+    if (area === 'local' && CONNECTION_STORAGE_KEYS.some((key) => key in changes)) {
       void refresh();
     }
   });
@@ -106,42 +73,15 @@ function clientFor(profile: ConnectionProfile): S3Client {
   return client;
 }
 
-export function useVault() {
+export function useConnections() {
   return {
-    status,
+    ready,
     profiles,
     activeProfile,
     activeProfileId,
     hostAccess,
     async init() {
       watchStorage();
-      await refresh();
-    },
-    async create(passphrase: string) {
-      await createVault(passphrase);
-      await recordActivity();
-      await refresh();
-    },
-    async unlock(passphrase: string) {
-      await unlockVault(passphrase);
-      await recordActivity();
-      await refresh();
-    },
-    async lock() {
-      await lockVault();
-      forgetSecrets();
-      status.value = 'locked';
-    },
-    /** Called by the auto-lock after it locked the vault. */
-    markLocked() {
-      forgetSecrets();
-      void refresh();
-    },
-    async reset() {
-      await destroyVault();
-      // The profiles are gone (and could not be read without the passphrase anyway), so no
-      // endpoint keeps the access it was granted for them.
-      await releaseAllHostPermissions();
       await refresh();
     },
     async saveProfile(input: ProfileInput, id?: string): Promise<ConnectionProfile> {
@@ -151,6 +91,7 @@ export function useVault() {
         saved = { ...input, id };
         await updateProfile(saved);
         resetCapabilities(id);
+        clients.delete(id);
         if (previous && hostPatternFor(previous) !== hostPatternFor(saved)) {
           const others = profiles.value.filter((profile) => profile.id !== id);
           await releaseHostPermission(previous, [...others, saved]);

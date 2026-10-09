@@ -14,7 +14,6 @@ import { withCapability } from '@/core/s3/capabilities';
 import { collectKeys } from '@/core/s3/operations/list-keys';
 import { httpStatusOf, isAbortError } from '@/core/s3/s3-error';
 import ErrorAlert from '@/features/shared/ErrorAlert.vue';
-import { useBusy } from '@/features/shared/use-busy';
 import type { BrowserEntry } from './object-entry';
 
 const props = defineProps<{
@@ -36,7 +35,6 @@ const sourceCount = ref(0);
 const overwriteCount = ref(0);
 const progress = ref({ done: 0, total: 0 });
 const result = ref<PrefixTransferResult>();
-const busy = useBusy();
 let controller: AbortController | undefined;
 
 const isFolder = computed(() => props.entry.kind === 'folder');
@@ -131,7 +129,6 @@ async function run() {
   error.value = undefined;
   controller = new AbortController();
   progress.value = { done: 0, total: sourceCount.value };
-  const finish = busy.begin();
   try {
     await withCapability(props.profileId, 'copyObject', async () => {
       if (isFolder.value) {
@@ -166,8 +163,6 @@ async function run() {
     error.value = e;
     step.value = result.value?.remaining.length ? 'result' : 'edit';
     emit('done');
-  } finally {
-    finish();
   }
 }
 

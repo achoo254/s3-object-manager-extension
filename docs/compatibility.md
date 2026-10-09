@@ -22,8 +22,8 @@ Bằng chứng (08/10/2026, máy cục bộ, cả hai server chạy binary trên
   chỉ có quyền trên một bucket. Trên MinIO còn chạy thêm với một khoá bị cấm hẳn
   `s3:ListAllMyBuckets`.
 - `tests/e2e/extension.spec.ts` (Playwright, extension thật trong Chromium) đạt trên cả hai: đặt
-  passphrase ⟶ thêm kết nối ⟶ upload 50 MB multipart ⟶ duyệt ⟶ đổi tên ⟶ presign rồi tải link từ ngoài
-  extension ⟶ download qua trình tải của trình duyệt ⟶ xoá thư mục ⟶ khoá rồi mở lại vault.
+  thêm kết nối ⟶ upload 50 MB multipart ⟶ duyệt ⟶ đổi tên ⟶ presign rồi tải link từ ngoài extension ⟶
+  download qua trình tải của trình duyệt ⟶ xoá thư mục ⟶ tải lại trang, kết nối vẫn còn.
 
 ¹ Cả hai server trả danh sách bucket **đã lọc** cho khoá phạm vi hẹp thay vì `AccessDenied` (MinIO
 lọc kể cả khi policy cấm hẳn `s3:ListAllMyBuckets`), nên kết nối hoạt động bình thường. Nhánh dự

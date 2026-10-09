@@ -4,12 +4,12 @@ title: Chính sách quyền riêng tư / Privacy policy
 
 # Chính sách quyền riêng tư
 
-Cập nhật: 08/10/2026 · Áp dụng cho extension trình duyệt "S3 Object Manager" (tên tạm).
+Cập nhật: 09/10/2026 · Áp dụng cho extension trình duyệt "S3 Object Manager" (tên tạm).
 
-- **Credentials chỉ nằm trên máy bạn.** Endpoint, access key và secret key bạn nhập được mã hoá bằng
-  passphrase của bạn (PBKDF2-SHA256 600.000 vòng, AES-GCM) và lưu trong bộ nhớ cục bộ của trình
-  duyệt. Khoá giải mã chỉ nằm trong bộ nhớ tạm của phiên trình duyệt và mất khi bạn khoá, khi
-  extension tự khoá, hoặc khi trình duyệt khởi động lại.
+- **Credentials chỉ nằm trên máy bạn.** Endpoint, access key và secret key bạn nhập được lưu trong bộ
+  nhớ cục bộ của trình duyệt, mã hoá bằng một khoá ngẫu nhiên cũng nằm trên máy. Không cần mật khẩu,
+  nên ai dùng được máy hoặc hồ sơ trình duyệt này đều có thể lấy được các khoá đó; hãy dùng khoá chỉ có
+  quyền trên những bucket cần thiết.
 - **Extension chỉ gửi yêu cầu tới endpoint S3 bạn nhập**, và chỉ sau khi bạn cho phép truy cập địa
   chỉ đó. Không có máy chủ trung gian; dữ liệu đi thẳng giữa trình duyệt và endpoint của bạn.
 - **Không thu thập dữ liệu.** Không telemetry, không analytics, không tài khoản, không đăng nhập,
@@ -26,12 +26,12 @@ Gỡ extension sẽ xoá toàn bộ dữ liệu nó lưu trên máy.
 
 # Privacy policy
 
-Last updated: 8 October 2026 · Applies to the "S3 Object Manager" browser extension (working title).
+Last updated: 9 October 2026 · Applies to the "S3 Object Manager" browser extension (working title).
 
 - **Your credentials stay on your machine.** The endpoints, access keys and secret keys you enter are
-  encrypted with your passphrase (PBKDF2-SHA256, 600,000 iterations, AES-GCM) and kept in the
-  browser's local storage. The decryption key only lives in the browser session's memory and is gone
-  when you lock, when the extension locks itself, or when the browser restarts.
+  kept in the browser's local storage, encrypted with a random key that is also stored on the
+  machine. There is no password, so anyone who can use this machine or browser profile can get those
+  keys; prefer keys limited to the buckets you need.
 - **The extension only sends requests to the S3 endpoints you enter**, and only after you allow access
   to that address. There is no intermediate server; data flows directly between your browser and your
   endpoint.

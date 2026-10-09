@@ -55,7 +55,7 @@ người cần **kiểm được** credentials của mình đi đâu. Nếu khô
 | Giao diện tiếng Việt, lỗi S3 dịch thành việc cần làm | Có (phase 5) | Chỉ tiếng Anh | Chưa rõ |
 | Mã nguồn mở MIT | Có | Không nêu | Không nêu |
 | Không telemetry, không tài khoản, không đăng nhập | Có | Có analytics + đăng nhập | Chưa rõ |
-| Credentials mã hoá bằng passphrase, tự khoá | Có (phase 2) | Không nêu | Không nêu |
+| Lưu kết nối cục bộ, dùng ngay không cần mật khẩu (đổi 09/10/2026, xem nhật ký quyết định) | Có | Có đăng nhập | Chưa rõ |
 | Ma trận tương thích công khai, có Ceph RGW | Có (phase 6) | Không nêu nhà cung cấp cụ thể | Có liệt kê Ceph |
 | Upload multipart tiếp tục được sau khi đóng trình duyệt | Có (phase 4) | Ghi "retry" | Ghi ">5 GB" |
 
@@ -67,7 +67,7 @@ MVP — nếu muốn cạnh tranh tính năng sau MVP thì làm plan riêng.
 
 - **Outcome:** extension Chrome/Edge quản lý object trên mọi endpoint tương thích S3, chỉ cần endpoint + credentials,
   giao diện tiếng Việt là chính (kèm tiếng Anh).
-- **Constraints:** MV3; quyền host xin theo từng endpoint lúc chạy; credentials mã hoá bằng passphrase, chỉ gửi tới chính
+- **Constraints:** MV3; quyền host xin theo từng endpoint lúc chạy; credentials lưu cục bộ (không passphrase — quyết định 09/10/2026), chỉ gửi tới chính
   endpoint S3; không telemetry; không mã tải từ xa; SDK tắt checksum mặc định; giao diện Vuetify 3 (Material Design 3) với
   token riêng, không dùng design system hay nhận diện của thương hiệu khác.
 - **Non-goals:** IAM/policy/quota; đồng bộ thư mục; lifecycle/versioning/object lock; Firefox; tự động publish lên store.
@@ -75,7 +75,8 @@ MVP — nếu muốn cạnh tranh tính năng sau MVP thì làm plan riêng.
   1. Cùng một bản build chạy trọn duyệt, upload multipart >1 GB (tiếp tục được sau khi bị dừng), download, xoá, đổi tên và
      presign trên **SeaweedFS, Ceph RGW, Backblaze B2 và MinIO (image cuối cùng)** — ghi vào ma trận tương thích.
   2. Mọi lỗi S3 thường gặp (bảng ở phase 5) hiện câu tiếng Việt nêu việc cần làm.
-  3. Đóng trình duyệt rồi mở lại: credentials không đọc được nếu không nhập passphrase.
+  3. ~~Đóng trình duyệt rồi mở lại: credentials không đọc được nếu không nhập passphrase.~~ Thay bằng (09/10/2026):
+     kết nối dùng được ngay sau khi lưu, và còn nguyên sau khi cập nhật bản thử (cùng ID extension).
   4. Mỗi endpoint chỉ được cấp quyền host sau khi người dùng đồng ý.
   5. Có trang chính sách quyền riêng tư công khai; bản zip được Chrome Web Store và Edge Add-ons nhận.
   6. Performance đạt ngưỡng ở mục dưới, số đo ghi ở `docs/performance.md`.
@@ -97,7 +98,7 @@ Mọi ngưỡng là **giả định, cần xác nhận** — chưa có người 
 ```
 Bấm icon extension ──► mở tab manager.html (KHÔNG dùng popup: popup đóng khi mất focus, upload dài sẽ chết)
    │
-   ├─ vault (WebCrypto PBKDF2 → AES-GCM) ──► chrome.storage.local (bản mã)
+   ├─ kết nối (AES-GCM, khoá ngẫu nhiên lưu cùng máy) ──► chrome.storage.local
    │        └─ khoá đã mở (raw bytes) ──► chrome.storage.session (chỉ trong RAM, mất khi khởi động lại trình duyệt)
    ├─ s3-client factory (@aws-sdk/client-s3, checksum WHEN_REQUIRED, forcePathStyle theo profile)
    │        └─ fetch thẳng tới endpoint (host permission ⟹ không CORS)
@@ -138,7 +139,7 @@ Phase 3 và 4 làm song song được (tệp tách biệt: `src/features/browser
 
 | Rủi ro | Xử lý |
 |---|---|
-| Lộ credentials (có thể là khoá root AWS) | Vault mã hoá + tự khoá; README khuyên khoá phạm vi hẹp; không telemetry |
+| Lộ credentials (có thể là khoá root AWS) | Không còn passphrase (09/10/2026): README, form và trang privacy nói rõ ai dùng được máy là lấy được khoá; khuyên khoá phạm vi hẹp; không telemetry |
 | Tài khoản store/dependency bị chiếm ⟹ bản cập nhật độc hại | 2FA tài khoản store; ít dependency, khoá phiên bản, lockfile; Dependabot chỉ tạo PR |
 | Server không phải AWS từ chối checksum CRC32 / đòi `Content-MD5` cho `DeleteObjects` | `WHEN_REQUIRED` cho mọi thao tác; riêng `DeleteObjects` **luôn** bỏ CRC32 và gửi `Content-MD5` (phase 2) |
 | Khoá phạm vi hẹp không có quyền `ListBuckets` | Profile cho khai bucket mặc định; kiểm kết nối bằng `HeadBucket` khi `ListBuckets` bị `AccessDenied` |
@@ -167,10 +168,12 @@ Phase 3 và 4 làm song song được (tệp tách biệt: `src/features/browser
 
 | Câu hỏi | Chọn | Lý do |
 |---|---|---|
-| Giữ khoá vault đã mở ở đâu | Raw bytes trong `chrome.storage.session`, `importKey` non-extractable mỗi lượt dùng | Lỡ đóng tab không phải nhập lại passphrase; vẫn mất khi khởi động lại trình duyệt, có tự khoá |
+| ~~Giữ khoá vault đã mở ở đâu~~ (bỏ 09/10/2026) | Raw bytes trong `chrome.storage.session`, `importKey` non-extractable mỗi lượt dùng | Lỡ đóng tab không phải nhập lại passphrase; vẫn mất khi khởi động lại trình duyệt, có tự khoá |
 | Checksum của `DeleteObjects` | Luôn bỏ CRC32, gửi `Content-MD5`, mọi endpoint | AWS cũng nhận `Content-MD5` ⟹ một đường cho mọi nhà cung cấp |
 | vue-i18n dưới CSP | `@intlify/unplugin-vue-i18n` + bản runtime-only | Không cần `unsafe-eval` |
 | Server S3 local + CI | SeaweedFS | MinIO bản cộng đồng đã ngừng phát hành image (~10/2025) và bị archive; SeaweedFS còn duy trì, chạy một container |
 | Ma trận tương thích | SeaweedFS, Ceph RGW, Backblaze B2, MinIO (image cuối, chạy tay) | B2 miễn phí 10 GB không cần thẻ, kiểm được cả hai kiểu địa chỉ; MinIO vẫn còn nhiều hệ tự dựng |
 | Nền giao diện | Vuetify 3 Material Design 3 + token riêng | Đủ bảng dữ liệu, danh sách ảo hoá, dialog, form; giấy phép MIT |
 | Backend/proxy | Không | Credentials ở lại máy người dùng; extension không bị CORS chặn |
+| Passphrase cho credentials (09/10/2026, chủ dự án quyết) | **Bỏ**: lưu xong dùng ngay | Người dùng mục tiêu là người phổ thông, ít kỹ thuật. Không có bí mật của người dùng thì mã hoá chỉ để che mắt; ghi rõ trong privacy |
+| Giữ kết nối khi cập nhật bản thử (09/10/2026) | ID extension cố định cho bản pre-release (khoá manifest chỉ thêm khi `PRERELEASE_BUILD=1`); vault passphrase cũ bị bỏ | Chọn qua Jev; store tự cấp ID nên bản store không mang khoá |

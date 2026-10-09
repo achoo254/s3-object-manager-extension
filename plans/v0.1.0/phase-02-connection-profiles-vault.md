@@ -2,6 +2,10 @@
 
 Tier: **M** · Phụ thuộc: phase 1 · Trạng thái: xong · Issue: #2
 
+> **Đổi 09/10/2026:** chủ dự án bỏ passphrase, tự khoá và nút "Khoá ngay" để phục vụ người dùng
+> phổ thông. Kết nối lưu trong `chrome.storage.local`, mã hoá AES-GCM với khoá ngẫu nhiên đặt cùng máy
+> (`src/core/storage/connection-storage.ts`). Phần Vault bên dưới giữ lại làm lịch sử.
+
 ## Mục tiêu
 
 Người dùng thêm được nhiều kết nối S3, credentials luôn được mã hoá khi lưu, mỗi endpoint chỉ được gọi sau khi người

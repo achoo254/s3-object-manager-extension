@@ -8,7 +8,7 @@ import {
   type UploadStateStore,
 } from '@/core/upload/upload-state-store';
 import { Semaphore } from '@/core/util/semaphore';
-import { useVault } from '@/features/connections/use-vault';
+import { useConnections } from '@/features/connections/use-connections';
 import { useSettings } from '@/features/settings/use-settings';
 import { useNotify } from '@/features/shared/use-notify';
 
@@ -71,14 +71,13 @@ function recordSpeed(job: UploadJob, bytes: number) {
 }
 
 /**
- * The client is looked up when the job starts, never kept by the queue: a locked vault, or a
- * profile that was edited or deleted, must not keep uploading with old credentials.
+ * The client is looked up when the job starts, never kept by the queue: a profile that was
+ * edited or deleted must not keep uploading with old credentials.
  */
 function currentClient(profileId: string) {
-  const vault = useVault();
-  const profile = vault.profiles.value.find((p) => p.id === profileId);
-  if (vault.status.value !== 'unlocked' || !profile) return undefined;
-  return vault.clientFor(profile);
+  const connections = useConnections();
+  const profile = connections.profiles.value.find((p) => p.id === profileId);
+  return profile ? connections.clientFor(profile) : undefined;
 }
 
 async function runJob(job: UploadJob) {
@@ -216,12 +215,6 @@ export function useUploadQueue() {
     pause,
     resume,
     cancel,
-    /** Called when the vault locks: nothing keeps uploading without unlocked credentials. */
-    pauseAll() {
-      for (const job of jobs.value) {
-        if (job.status === 'running' || job.status === 'queued') pause(job);
-      }
-    },
     /** The queue job uploading the file a saved state belongs to, if any. */
     jobForState(stateId: string): UploadJob | undefined {
       return jobs.value.find((job) => !FINISHED.includes(job.status) && stateIdOf(job) === stateId);

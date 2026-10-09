@@ -14,14 +14,14 @@ import { testConnection, type ConnectionTestResult } from '@/core/s3/operations/
 import { createS3Client } from '@/core/s3/s3-client-factory';
 import ErrorAlert from '@/features/shared/ErrorAlert.vue';
 import { useNotify } from '@/features/shared/use-notify';
-import { useVault } from './use-vault';
+import { useConnections } from './use-connections';
 
 const props = defineProps<{ profile?: ConnectionProfile }>();
 const open = defineModel<boolean>({ required: true });
 const emit = defineEmits<{ saved: [profile: ConnectionProfile] }>();
 
 const { t } = useI18n();
-const vault = useVault();
+const connections = useConnections();
 const { notify } = useNotify();
 
 const form = reactive({
@@ -138,7 +138,7 @@ async function save() {
   busy.value = 'save';
   error.value = undefined;
   try {
-    const saved = await vault.saveProfile(input, props.profile?.id);
+    const saved = await connections.saveProfile(input, props.profile?.id);
     notify(granted ? 'connections.saved' : 'connections.savedWithoutAccess', { name: saved.name });
     emit('saved', saved);
     open.value = false;
@@ -189,6 +189,7 @@ async function save() {
             :label="t('connections.form.addressing')"
             :hint="virtualUnavailable ? t('connections.form.virtualUnavailable') : undefined"
             :persistent-hint="virtualUnavailable"
+            class="mb-3"
             inline
             @update:model-value="addressingTouched = true"
           >

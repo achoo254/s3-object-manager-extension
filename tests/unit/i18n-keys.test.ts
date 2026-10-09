@@ -5,7 +5,6 @@ import { browserLocale } from '@/i18n';
 
 /** Keys built at runtime from a fixed set of values (the key check script only sees literals). */
 const dynamicKeys = [
-  ...['weak', 'fair', 'strong'].map((v) => `vault.strength.${v}`),
   ...['queued', 'running', 'paused', 'done', 'error', 'cancelled'].map((v) => `upload.status.${v}`),
   ...['hour', 'day', 'week'].map((v) => `share.duration.${v}`),
   ...['system', 'light', 'dark'].map((v) => `settings.theme.${v}`),

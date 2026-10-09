@@ -6,7 +6,6 @@ import { deleteFolders, type DeleteResult } from '@/core/s3/operations/delete-ob
 import { collectKeys } from '@/core/s3/operations/list-keys';
 import { isAbortError } from '@/core/s3/s3-error';
 import ErrorAlert from '@/features/shared/ErrorAlert.vue';
-import { useBusy } from '@/features/shared/use-busy';
 import type { BrowserEntry } from './object-entry';
 
 const props = defineProps<{ client: S3Client; bucket: string; entries: BrowserEntry[] }>();
@@ -21,7 +20,6 @@ const found = ref(0);
 const progress = ref({ done: 0, total: 0 });
 const result = ref<DeleteResult>();
 const error = ref<unknown>();
-const busy = useBusy();
 let controller: AbortController | undefined;
 
 /**
@@ -65,7 +63,6 @@ async function run() {
   step.value = 'running';
   controller = new AbortController();
   progress.value = { done: 0, total: keys.value.length };
-  const finish = busy.begin();
   try {
     const folders = props.entries
       .filter((entry) => entry.kind === 'folder')
@@ -81,8 +78,6 @@ async function run() {
     }
   } catch (e) {
     error.value = e;
-  } finally {
-    finish();
   }
   step.value = 'result';
   emit('done');

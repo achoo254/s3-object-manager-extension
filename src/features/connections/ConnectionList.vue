@@ -12,11 +12,11 @@ import type { ConnectionProfile } from '@/core/profiles/profile.types';
 import ConfirmDialog from '@/features/shared/ConfirmDialog.vue';
 import ErrorAlert from '@/features/shared/ErrorAlert.vue';
 import ConnectionForm from './ConnectionForm.vue';
-import { useVault } from './use-vault';
+import { useConnections } from './use-connections';
 
 const { t } = useI18n();
-const vault = useVault();
-const { profiles, activeProfileId } = vault;
+const connections = useConnections();
+const { profiles, activeProfileId } = connections;
 
 const formOpen = ref(false);
 const editing = ref<ConnectionProfile>();
@@ -44,7 +44,7 @@ async function remove() {
   confirmDelete.value = false;
   if (!profile) return;
   try {
-    await vault.deleteProfile(profile);
+    await connections.deleteProfile(profile);
   } catch (e) {
     error.value = e;
   }

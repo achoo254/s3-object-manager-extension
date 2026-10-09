@@ -5,8 +5,10 @@
 Bản đầu tiên.
 
 - Kết nối tới mọi endpoint tương thích S3 bằng endpoint + access key; path-style hoặc virtual-hosted.
-- Vault: credentials mã hoá bằng passphrase (PBKDF2-SHA256 600.000 vòng, AES-GCM), tự khoá sau
-  thời gian không thao tác, nút "Khoá ngay".
+- Lưu kết nối xong dùng được ngay, không cần mật khẩu (dành cho người dùng phổ thông); kết nối nằm
+  trong bộ nhớ cục bộ của trình duyệt.
+- Bản thử trên GitHub có ID extension cố định: cập nhật bằng cách giải nén đè và bấm Reload, không mất
+  kết nối.
 - Quyền truy cập trang xin theo từng endpoint lúc chạy; không xin quyền host khi cài.
 - Duyệt bucket/thư mục với danh sách ảo hoá, tải thêm khi cuộn, lọc theo tiền tố tên.
 - Xoá (theo lô 1.000 key), đổi tên/di chuyển, sao chép (kể cả object > 5 GiB), tạo thư mục, xem

@@ -22,7 +22,7 @@ const secretAccessKey = process.env.E2E_S3_SECRET_ACCESS_KEY ?? keys?.secretKey 
 
 /** The extension APIs used inside `page.evaluate` (runs in the extension page). */
 declare const chrome: {
-  storage: { local: StorageArea; session: StorageArea };
+  storage: { local: StorageArea };
   downloads: {
     search(query: object): Promise<{ url: string; state: string; bytesReceived: number }[]>;
   };
@@ -31,7 +31,6 @@ interface StorageArea {
   get(keys: null): Promise<Record<string, unknown>>;
 }
 
-const PASSPHRASE = 'e2e passphrase for the vault';
 const bucket = `e2e-${Date.now()}`;
 const FILE_SIZE = 50 * 1024 * 1024; // multipart: 7 parts of 8 MiB
 
@@ -59,12 +58,8 @@ test.afterAll(async () => {
   await admin.send(new DeleteBucketCommand({ Bucket: bucket }));
 });
 
-/** Sets the passphrase and adds a tested connection to the local server. */
-async function createVaultAndConnection(page: Page) {
-  await page.getByTestId('vault-passphrase').locator('input').fill(PASSPHRASE);
-  await page.getByTestId('vault-passphrase-confirm').locator('input').fill(PASSPHRASE);
-  await page.getByTestId('vault-create').click();
-
+/** Adds a tested connection to the local server. */
+async function addConnection(page: Page) {
   // Host access to localhost is pre-granted in the e2e build.
   await page.getByTestId('profile-add').click();
   await page.getByTestId('profile-name').locator('input').fill('Local S3');
@@ -85,7 +80,7 @@ test('full flow against a local S3 server', async ({ manager: page, pageErrors }
   for (let i = 0; i < FILE_SIZE; i += 4096) content[i] = i % 251;
   writeFileSync(bigFile, content);
 
-  await createVaultAndConnection(page);
+  await addConnection(page);
 
   // Credentials are never stored in clear text.
   const stored = await page.evaluate(() => chrome.storage.local.get(null));
@@ -158,13 +153,8 @@ test('full flow against a local S3 server', async ({ manager: page, pageErrors }
   await page.getByTestId('delete-confirm').click();
   await expect(page.getByTestId('entry-docs/')).toHaveCount(0);
 
-  // Lock, then unlock again with the passphrase.
-  await page.getByTestId('lock-now').click();
-  await expect(page.getByTestId('vault-unlock')).toBeVisible();
-  const session = await page.evaluate(() => chrome.storage.session.get(null));
-  expect(Object.keys(session)).not.toContain('vaultKey');
-  await page.getByTestId('vault-passphrase').locator('input').fill(PASSPHRASE);
-  await page.getByTestId('vault-unlock').click();
+  // Saved connections survive a reload with nothing to type.
+  await page.reload();
   await expect(page.getByTestId('profile-item-Local S3')).toBeVisible();
 
   // No CSP violations or uncaught errors in the extension page.
@@ -180,7 +170,7 @@ test('uploads keep running after the upload panel is closed', async ({ manager: 
     return path;
   });
 
-  await createVaultAndConnection(page);
+  await addConnection(page);
   await page.getByTestId('profile-item-Local S3').click();
   await page.getByTestId('bucket-list').getByText(bucket).click();
   await page.getByTestId('new-folder').click();

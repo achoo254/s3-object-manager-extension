@@ -1,6 +1,5 @@
 import { FileTooLargeError } from '@/core/upload/multipart-uploader';
 import { OverlappingTransferError } from './operations/copy-object';
-import { WrongPassphraseError } from '@/core/vault/vault-crypto';
 import { asS3Error, httpStatusOf, s3ErrorCode } from './s3-error';
 
 /**
@@ -30,7 +29,6 @@ type Kind =
   | 'notImplemented'
   | 'network'
   | 'proxyBlocked'
-  | 'wrongPassphrase'
   | 'fileTooLarge'
   | 'overlappingTransfer'
   | 'unknown';
@@ -70,7 +68,6 @@ function isNetworkError(error: unknown): boolean {
 }
 
 function classify(error: unknown): Kind {
-  if (error instanceof WrongPassphraseError) return 'wrongPassphrase';
   if (error instanceof FileTooLargeError) return 'fileTooLarge';
   if (error instanceof OverlappingTransferError) return 'overlappingTransfer';
   if (isNetworkError(error)) return 'network';
@@ -100,8 +97,7 @@ function rawCode(error: unknown): string {
 export function describeS3Error(error: unknown): ErrorDescription {
   const kind = classify(error);
   // Errors raised by the extension itself carry no server code worth showing.
-  const local =
-    kind === 'wrongPassphrase' || kind === 'fileTooLarge' || kind === 'overlappingTransfer';
+  const local = kind === 'fileTooLarge' || kind === 'overlappingTransfer';
   const code = local ? '' : rawCode(error);
   const params: Record<string, string | number> = { code };
   if (error instanceof FileTooLargeError) params.maxGiB = Math.floor(error.maxBytes / 1024 ** 3);

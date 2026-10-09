@@ -18,34 +18,6 @@
     "save": "Lưu",
     "stop": "Dừng"
   },
-  "vault": {
-    "passphrase": "Passphrase",
-    "lockNow": "Khoá ngay",
-    "strength": {
-      "weak": "Yếu — nên dùng ít nhất 12 ký tự, trộn chữ hoa, chữ thường, số và ký hiệu",
-      "fair": "Tạm được",
-      "strong": "Mạnh"
-    },
-    "setup": {
-      "title": "Đặt passphrase bảo vệ credentials",
-      "intro": "Mọi khoá truy cập bạn lưu sẽ được mã hoá bằng passphrase này và chỉ nằm trên máy bạn. Mỗi lần khởi động lại trình duyệt, bạn cần nhập lại passphrase.",
-      "noRecovery": "Không có cách khôi phục passphrase. Nếu quên, bạn chỉ có thể xoá toàn bộ kết nối đã lưu và nhập lại từ đầu.",
-      "confirm": "Nhập lại passphrase",
-      "mismatch": "Hai passphrase chưa khớp",
-      "submit": "Tạo kho khoá"
-    },
-    "unlock": {
-      "title": "Mở khoá",
-      "intro": "Nhập passphrase để giải mã các kết nối đã lưu.",
-      "submit": "Mở khoá",
-      "forgot": "Quên passphrase?"
-    },
-    "reset": {
-      "title": "Xoá kho khoá?",
-      "message": "Toàn bộ kết nối đã lưu (endpoint và khoá truy cập) sẽ bị xoá vĩnh viễn khỏi máy này. Dữ liệu trên server S3 không bị ảnh hưởng. Sau đó bạn đặt passphrase mới và thêm lại kết nối.",
-      "confirm": "Xoá kho khoá"
-    }
-  },
   "connections": {
     "title": "Kết nối",
     "add": "Thêm kết nối",
@@ -77,7 +49,7 @@
       "accessKeyId": "Access key ID",
       "secretAccessKey": "Secret access key",
       "sessionToken": "Session token (tuỳ chọn)",
-      "scopedKeyAdvice": "Nên dùng khoá chỉ có quyền trên những bucket cần quản lý, không dùng khoá quản trị toàn tài khoản.",
+      "scopedKeyAdvice": "Kết nối được lưu trên máy này để dùng ngay, không cần mật khẩu. Ai dùng chung máy hoặc hồ sơ trình duyệt này có thể lấy được khoá, vì vậy nên dùng khoá chỉ có quyền trên những bucket cần quản lý.",
       "permissionNote": "Khi lưu hoặc kiểm tra, trình duyệt sẽ hỏi quyền truy cập {pattern}. Extension chỉ gửi yêu cầu tới địa chỉ này.",
       "virtualUnavailable": "localhost và địa chỉ IP chỉ dùng được path-style."
     },
@@ -251,8 +223,6 @@
       "light": "Sáng",
       "dark": "Tối"
     },
-    "autoLock": "Tự khoá sau khi không thao tác",
-    "minutes": "phút",
     "concurrency": "Số phần tải lên song song: {count}",
     "concurrencyHint": "Mỗi phần chiếm tối đa 64 MiB bộ nhớ khi đang gửi. Tăng lên nếu đường truyền nhanh, giảm nếu máy ít RAM."
   },
@@ -313,10 +283,6 @@
     "proxyBlocked": {
       "title": "Yêu cầu bị chặn trước khi tới server S3",
       "action": "Một proxy hoặc tường lửa đứng trước endpoint đã trả về trang lỗi — không phải lỗi khoá. Liên hệ người quản trị mạng hoặc endpoint."
-    },
-    "wrongPassphrase": {
-      "title": "Sai passphrase",
-      "action": "Kiểm tra lại passphrase (chú ý chữ hoa/thường và bộ gõ tiếng Việt)."
     },
     "fileTooLarge": {
       "title": "Tệp quá lớn để tải lên",

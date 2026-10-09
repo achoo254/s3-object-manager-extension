@@ -1,35 +1,24 @@
 <script setup lang="ts">
-import {
-  mdiCogOutline,
-  mdiLockOutline,
-  mdiTrayArrowUp,
-  mdiWeatherNight,
-  mdiWhiteBalanceSunny,
-} from '@mdi/js';
+import { mdiCogOutline, mdiTrayArrowUp, mdiWeatherNight, mdiWhiteBalanceSunny } from '@mdi/js';
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useTheme } from 'vuetify';
-import { startAutoLock } from '@/core/vault/auto-lock';
 import { browserLocale } from '@/i18n';
 import ProfileView from '@/features/browser/ProfileView.vue';
 import ConnectionList from '@/features/connections/ConnectionList.vue';
-import { useVault } from '@/features/connections/use-vault';
-import VaultSetup from '@/features/connections/VaultSetup.vue';
-import VaultUnlock from '@/features/connections/VaultUnlock.vue';
+import { useConnections } from '@/features/connections/use-connections';
 import SettingsDialog from '@/features/settings/SettingsDialog.vue';
 import { useSettings } from '@/features/settings/use-settings';
-import { useBusy } from '@/features/shared/use-busy';
 import { useNotify } from '@/features/shared/use-notify';
 import UploadQueue from '@/features/upload/UploadQueue.vue';
 import { useUploadQueue } from '@/features/upload/use-upload-queue';
 
 const { t, locale } = useI18n();
 const theme = useTheme();
-const vault = useVault();
+const connections = useConnections();
 const { settings, load: loadSettings, update: updateSettings } = useSettings();
 const { notices, dismiss } = useNotify();
 const queue = useUploadQueue();
-const busy = useBusy();
 
 const settingsOpen = ref(false);
 const queueOpen = ref(false);
@@ -57,13 +46,6 @@ watch(
     document.documentElement.lang = locale.value;
   },
 );
-// Locking (by hand or automatically) stops uploads; they resume from the saved parts.
-watch(
-  () => vault.status.value,
-  (status) => {
-    if (status !== 'unlocked') queue.pauseAll();
-  },
-);
 watch(
   () => queue.jobs.value.length,
   (count, previous) => {
@@ -75,7 +57,6 @@ function warnBeforeClose(event: BeforeUnloadEvent) {
   if (queue.isBusy.value) event.preventDefault();
 }
 
-let stopAutoLock: (() => void) | undefined;
 onMounted(async () => {
   await loadSettings();
   locale.value = settings.locale ?? browserLocale();
@@ -83,16 +64,10 @@ onMounted(async () => {
   applyTheme();
   systemDark.addEventListener('change', applyTheme);
   window.addEventListener('beforeunload', warnBeforeClose);
-  await vault.init();
-  stopAutoLock = startAutoLock({
-    minutes: () => settings.autoLockMinutes,
-    isBusy: () => queue.isBusy.value || busy.isBusy.value,
-    onLocked: () => vault.markLocked(),
-  });
+  await connections.init();
 });
 
 onBeforeUnmount(() => {
-  stopAutoLock?.();
   systemDark.removeEventListener('change', applyTheme);
   window.removeEventListener('beforeunload', warnBeforeClose);
 });
@@ -106,13 +81,13 @@ onBeforeUnmount(() => {
       </template>
       <v-app-bar-title>
         {{ t('app.title') }}
-        <span v-if="vault.activeProfile.value" class="text-medium-emphasis text-body-2 ml-2">
-          · {{ vault.activeProfile.value.name }}
+        <span v-if="connections.activeProfile.value" class="text-medium-emphasis text-body-2 ml-2">
+          · {{ connections.activeProfile.value.name }}
         </span>
       </v-app-bar-title>
       <template #append>
         <v-btn
-          v-if="vault.status.value === 'unlocked'"
+          v-if="connections.ready.value"
           :aria-label="t('upload.queue.title')"
           icon
           @click="queueOpen = !queueOpen"
@@ -131,20 +106,10 @@ onBeforeUnmount(() => {
           :aria-label="t('settings.title')"
           @click="settingsOpen = true"
         />
-        <v-btn
-          v-if="vault.status.value === 'unlocked'"
-          :prepend-icon="mdiLockOutline"
-          variant="tonal"
-          class="mr-2"
-          data-testid="lock-now"
-          @click="vault.lock()"
-        >
-          {{ t('vault.lockNow') }}
-        </v-btn>
       </template>
     </v-app-bar>
 
-    <template v-if="vault.status.value === 'unlocked'">
+    <template v-if="connections.ready.value">
       <v-navigation-drawer permanent width="300">
         <ConnectionList />
       </v-navigation-drawer>
@@ -162,10 +127,11 @@ onBeforeUnmount(() => {
 
     <v-main>
       <div class="main-content">
-        <v-progress-linear v-if="vault.status.value === 'loading'" indeterminate color="primary" />
-        <VaultSetup v-else-if="vault.status.value === 'absent'" />
-        <VaultUnlock v-else-if="vault.status.value === 'locked'" />
-        <ProfileView v-else-if="vault.activeProfile.value" :profile="vault.activeProfile.value" />
+        <v-progress-linear v-if="!connections.ready.value" indeterminate color="primary" />
+        <ProfileView
+          v-else-if="connections.activeProfile.value"
+          :profile="connections.activeProfile.value"
+        />
         <div v-else class="welcome">
           <h1 class="text-h5">{{ t('app.welcome.title') }}</h1>
           <p class="text-body-1 mt-2">{{ t('app.welcome.body') }}</p>

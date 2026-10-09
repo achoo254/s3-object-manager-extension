@@ -23,11 +23,10 @@ ma trận thì chưa được coi là "hỗ trợ". Số đo hiệu năng: [docs
 
 ## Bảo mật và quyền riêng tư
 
-- Credentials được mã hoá bằng passphrase (PBKDF2-SHA256 600.000 vòng ⟶ AES-GCM) và chỉ lưu trên
-  máy. Khoá giải mã chỉ nằm trong bộ nhớ phiên của trình duyệt: khoá tay, tự khoá sau N phút không
-  thao tác (mặc định 30), hoặc khởi động lại trình duyệt thì phải nhập lại passphrase. Khoá vault
-  cũng tạm dừng mọi upload đang chạy (tiếp tục được sau khi mở khoá).
-- **Quên passphrase thì không khôi phục được**: chỉ có thể xoá kho khoá và thêm lại kết nối.
+- Dành cho người dùng phổ thông: lưu kết nối xong là dùng được ngay, **không cần mật khẩu**. Kết
+  nối nằm trong bộ nhớ cục bộ của trình duyệt trên máy này, được mã hoá bằng một khoá ngẫu nhiên đặt
+  cùng chỗ. Việc mã hoá này chỉ để dữ liệu thô không đọc được bằng mắt; ai dùng được máy hoặc hồ sơ
+  trình duyệt này đều có thể lấy được khoá truy cập.
 - Extension gọi thẳng tới endpoint S3, không qua máy chủ trung gian; không telemetry, không tài
   khoản. Lúc cài chỉ xin quyền `storage` và `downloads`; quyền truy cập từng endpoint được xin khi bạn
   thêm kết nối, và không request nào được gửi trước khi bạn đồng ý.
@@ -69,7 +68,7 @@ pnpm dev                      # Chrome có nạp extension, tự tải lại
 | `pnpm build:e2e && pnpm perf`                                         | đo hiệu năng (không chạy trong CI)                                        |
 | `pnpm build:e2e && pnpm screenshots`                                  | ảnh chụp cho trang store                                                  |
 
-Cấu trúc: `src/core` (vault, profile, S3 client và thao tác, upload) không phụ thuộc giao diện;
+Cấu trúc: `src/core` (lưu kết nối, profile, S3 client và thao tác, upload) không phụ thuộc giao diện;
 `src/features` là giao diện Vue + Vuetify; mọi màu đi qua `src/styles/design-tokens.ts`; chuỗi giao
 diện nằm ở `src/i18n/{vi,en}.json`.
 
@@ -81,6 +80,13 @@ Repo chỉ nói về chính extension. Danh sách từ cấm là một regex gi�
 - Máy local: đặt biến môi trường `FORBIDDEN_TERMS_REGEX`, rồi chạy `scripts/install-git-hooks.sh`
   để cài hook `pre-commit` và `commit-msg`.
 
+### Cập nhật bản thử (pre-release)
+
+Bản trên GitHub Releases có ID extension cố định (`mdmjpiiemaagpcohlklceiamoehafmgj`). Để cập nhật mà
+giữ các kết nối đã lưu: giải nén bản mới **đè vào đúng thư mục cũ**, rồi bấm **Reload** trên thẻ
+extension. Đừng bấm Remove: gỡ extension sẽ xoá các kết nối. Bản cài từ store tự cập nhật và giữ dữ
+liệu.
+
 ### Phát hành
 
 Push tag `vX.Y.Z` (khớp `version` trong `package.json`) ⟹ workflow `Release` build và đính zip Chrome
@@ -91,8 +97,8 @@ Push tag `vX.Y.Z` (khớp `version` trong `package.json`) ⟹ workflow `Release`
 ## English summary
 
 A Manifest V3 extension for Chrome and Edge that manages objects on any S3-compatible endpoint with
-just an endpoint and an access key pair. Credentials are encrypted with your passphrase and never
-leave your machine except to the endpoint you configured; there is no backend, no telemetry and no
+just an endpoint and an access key pair. Connections are saved on your machine and work right away
+with no password; credentials are only ever sent to the endpoint you configured; there is no backend, no telemetry and no
 account. Features: virtualised browsing of very large folders, resumable parallel multipart uploads,
 downloads through the browser's download manager, batch delete, rename/move/copy, presigned share
 links, and plain-language error messages in Vietnamese and English. See

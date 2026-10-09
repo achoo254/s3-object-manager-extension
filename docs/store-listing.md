@@ -6,10 +6,10 @@ Không dùng tên, logo hay nhận diện của thương hiệu khác.
 
 ## Mô tả ngắn
 
-- vi: Duyệt, tải lên, tải xuống và chia sẻ object trên mọi dịch vụ lưu trữ tương thích S3. Credentials
-  mã hoá trên máy, không telemetry.
-- en: Browse, upload, download and share objects on any S3-compatible storage. Credentials stay
-  encrypted on your machine, no telemetry.
+- vi: Duyệt, tải lên, tải xuống và chia sẻ object trên mọi dịch vụ lưu trữ tương thích S3. Kết nối lưu
+  trên máy, không telemetry.
+- en: Browse, upload, download and share objects on any S3-compatible storage. Connections stay
+  on your machine, no telemetry.
 
 ## Mô tả dài (vi)
 
@@ -20,7 +20,7 @@ Quản lý object trên dịch vụ lưu trữ tương thích S3 ngay trong trì
 - Tải lên file lớn theo từng phần, tạm dừng và tiếp tục được, kể cả sau khi đóng trình duyệt.
 - Tải xuống qua trình tải của trình duyệt; đổi tên, sao chép, xoá, tạo thư mục.
 - Tạo link chia sẻ có thời hạn (1 giờ, 1 ngày, 7 ngày).
-- Credentials mã hoá bằng passphrase của bạn, tự khoá khi không dùng.
+- Lưu kết nối xong là dùng ngay, không cần mật khẩu; kết nối chỉ nằm trên máy của bạn.
 - Extension chỉ kết nối tới endpoint bạn nhập, sau khi bạn cho phép. Không telemetry, không tài
   khoản, mã nguồn mở MIT.
 
@@ -36,7 +36,7 @@ Manage objects on S3-compatible storage right in your browser, nothing to instal
 - Upload large files in parts; pause and resume, even after closing the browser.
 - Download through the browser's download manager; rename, copy, delete, create folders.
 - Time-limited share links (1 hour, 1 day, 7 days).
-- Credentials encrypted with your passphrase, locked automatically when idle.
+- Save a connection and use it right away, no password; connections stay on your machine.
 - Connects only to the endpoints you enter, after you allow it. No telemetry, no account, MIT open
   source.
 
@@ -44,7 +44,7 @@ Compatible with S3-standard storage services. Tested providers: see `docs/compat
 
 ## Khai báo dữ liệu (Privacy practices)
 
-- Loại dữ liệu: **Thông tin xác thực** (credentials của endpoint S3). Lưu cục bộ, mã hoá, **không**
+- Loại dữ liệu: **Thông tin xác thực** (credentials của endpoint S3). Lưu cục bộ trên máy, **không**
   truyền cho bên thứ ba, không dùng cho mục đích nào ngoài chức năng chính.
 - Không thu thập: thông tin cá nhân, lịch sử duyệt web, vị trí, nội dung trang web.
 - Chính sách quyền riêng tư: `docs/privacy.md` (đăng qua GitHub Pages).
@@ -60,5 +60,5 @@ Compatible with S3-standard storage services. Tested providers: see `docs/compat
 
 ## Ảnh chụp màn hình (1280×800)
 
-`docs/store/screenshots/{vi,en}-{1..6}-*.png`, tạo lại bằng `pnpm build:e2e && pnpm screenshots`
+`docs/store/screenshots/{vi,en}-{2..6}-*.png`, tạo lại bằng `pnpm build:e2e && pnpm screenshots`
 (dữ liệu mẫu trên SeaweedFS local, không có endpoint thật). Chụp lại sau khi chốt tên extension.

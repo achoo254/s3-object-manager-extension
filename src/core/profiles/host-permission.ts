@@ -51,11 +51,3 @@ export async function releaseHostPermission(
   if (remaining.some((profile) => patternCovers(pattern, profile))) return;
   await browser.permissions.remove({ origins: [pattern] });
 }
-
-/** Revokes every host access granted at runtime (used when the vault is deleted). */
-export async function releaseAllHostPermissions(): Promise<void> {
-  const granted = (await browser.permissions.getAll()).origins ?? [];
-  const required = new Set(browser.runtime.getManifest().host_permissions ?? []);
-  const optional = granted.filter((origin) => !required.has(origin));
-  if (optional.length) await browser.permissions.remove({ origins: optional });
-}

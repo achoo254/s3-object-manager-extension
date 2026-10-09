@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { describeS3Error } from '@/core/s3/describe-s3-error';
 import { FileTooLargeError } from '@/core/upload/multipart-uploader';
-import { WrongPassphraseError } from '@/core/vault/vault-crypto';
 import en from '@/i18n/en.json';
 import vi from '@/i18n/vi.json';
 
@@ -52,7 +51,6 @@ const table: Array<[string, unknown, string]> = [
   ['403 with HTML body', bodyless(403, 'text/html; charset=utf-8'), 'proxyBlocked'],
   ['403 on HEAD (no body)', bodyless(403, 'application/xml'), 'accessDenied'],
   ['404 on HEAD (no body)', bodyless(404), 'noSuchKey'],
-  ['wrong passphrase', new WrongPassphraseError(), 'wrongPassphrase'],
 ];
 
 describe('describeS3Error', () => {

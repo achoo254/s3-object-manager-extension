@@ -1,4 +1,4 @@
-import { readVault, writeVault } from '@/core/vault/vault-store';
+import { readConnections, writeConnections } from '@/core/storage/connection-storage';
 import type { Addressing, ConnectionProfile, ProfileInput } from './profile.types';
 
 const LOCAL_HOSTS = new Set(['localhost', '127.0.0.1']);
@@ -37,29 +37,27 @@ export function suggestAddressing(endpoint: string): Addressing {
   }
 }
 
-export async function listProfiles(): Promise<ConnectionProfile[]> {
-  return (await readVault()).profiles;
+export function listProfiles(): Promise<ConnectionProfile[]> {
+  return readConnections();
 }
 
 export async function addProfile(input: ProfileInput): Promise<ConnectionProfile> {
-  const vault = await readVault();
+  const profiles = await readConnections();
   const profile: ConnectionProfile = { ...input, id: crypto.randomUUID() };
-  await writeVault({ ...vault, profiles: [...vault.profiles, profile] });
+  await writeConnections([...profiles, profile]);
   return profile;
 }
 
 export async function updateProfile(profile: ConnectionProfile): Promise<void> {
-  const vault = await readVault();
-  await writeVault({
-    ...vault,
-    profiles: vault.profiles.map((existing) => (existing.id === profile.id ? profile : existing)),
-  });
+  const profiles = await readConnections();
+  await writeConnections(
+    profiles.map((existing) => (existing.id === profile.id ? profile : existing)),
+  );
 }
 
 /** Removes the profile and returns the profiles that remain. */
 export async function removeProfile(id: string): Promise<ConnectionProfile[]> {
-  const vault = await readVault();
-  const profiles = vault.profiles.filter((profile) => profile.id !== id);
-  await writeVault({ ...vault, profiles });
+  const profiles = (await readConnections()).filter((profile) => profile.id !== id);
+  await writeConnections(profiles);
   return profiles;
 }
