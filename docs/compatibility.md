@@ -5,28 +5,30 @@ chưa kiểm là "chưa kiểm", không phải "không chạy".
 
 ## Ma trận (MVP v0.1.0)
 
-| Thao tác                                  | SeaweedFS 4.47 | MinIO RELEASE.2025-09-07 ² | Ceph RGW  | Backblaze B2 (path) | Backblaze B2 (virtual) |
-| ----------------------------------------- | -------------- | -------------------------- | --------- | ------------------- | ---------------------- |
-| Liệt kê bucket / thư mục                  | Đạt            | Đạt                        | chưa kiểm | chưa kiểm           | chưa kiểm              |
-| Upload thường (`PutObject`)               | Đạt            | Đạt                        | chưa kiểm | chưa kiểm           | chưa kiểm              |
-| Multipart + tiếp tục sau khi ngắt         | Đạt            | Đạt                        | chưa kiểm | chưa kiểm           | chưa kiểm              |
-| Download (presigned + trình duyệt tải)    | Đạt            | Đạt                        | chưa kiểm | chưa kiểm           | chưa kiểm              |
-| Đổi tên / di chuyển (object và thư mục)   | Đạt            | Đạt                        | chưa kiểm | chưa kiểm           | chưa kiểm              |
-| Xoá lô `DeleteObjects` với `Content-MD5`  | Đạt            | Đạt                        | chưa kiểm | chưa kiểm           | chưa kiểm              |
-| Presign link chia sẻ                      | Đạt            | Đạt                        | chưa kiểm | chưa kiểm           | chưa kiểm              |
-| Khoá phạm vi hẹp (không có `ListBuckets`) | Đạt ¹          | Đạt ¹                      | chưa kiểm | chưa kiểm           | chưa kiểm              |
+| Thao tác                                  | SeaweedFS 4.47 | MinIO RELEASE.2025-09-07 ² | Ceph RGW 19.2.3 (path) ³ | Backblaze B2 (path) | Backblaze B2 (virtual) |
+| ----------------------------------------- | -------------- | -------------------------- | ------------------------ | ------------------- | ---------------------- |
+| Liệt kê bucket / thư mục                  | Đạt            | Đạt                        | Đạt                      | chưa kiểm           | chưa kiểm              |
+| Upload thường (`PutObject`)               | Đạt            | Đạt                        | Đạt                      | chưa kiểm           | chưa kiểm              |
+| Multipart + tiếp tục sau khi ngắt         | Đạt            | Đạt                        | Đạt                      | chưa kiểm           | chưa kiểm              |
+| Download (presigned + trình duyệt tải)    | Đạt            | Đạt                        | Đạt                      | chưa kiểm           | chưa kiểm              |
+| Đổi tên / di chuyển (object và thư mục)   | Đạt            | Đạt                        | Đạt                      | chưa kiểm           | chưa kiểm              |
+| Xoá lô `DeleteObjects` với `Content-MD5`  | Đạt            | Đạt                        | Đạt                      | chưa kiểm           | chưa kiểm              |
+| Presign link chia sẻ                      | Đạt            | Đạt                        | Đạt                      | chưa kiểm           | chưa kiểm              |
+| Khoá phạm vi hẹp (không có `ListBuckets`) | Đạt ¹          | Đạt ¹                      | Đạt ¹                    | chưa kiểm           | chưa kiểm              |
 
-Bằng chứng (08/10/2026, máy cục bộ, cả hai server chạy binary trên cùng máy):
+Bằng chứng (08–09/10/2026; SeaweedFS và MinIO chạy binary trên cùng máy, Ceph RGW là cụm lab 3 node truy cập qua VPN):
 
 - `tests/integration/s3-provider.test.ts`: 10/10 đạt trên mỗi server, với khoá quản trị và với khoá
-  chỉ có quyền trên một bucket. Trên MinIO còn chạy thêm với một khoá bị cấm hẳn
+  chỉ có quyền trên một bucket (trên Ceph: một user không sở hữu bucket nào, được cấp quyền qua bucket
+  policy). Trên MinIO còn chạy thêm với một khoá bị cấm hẳn
   `s3:ListAllMyBuckets`.
-- `tests/e2e/extension.spec.ts` (Playwright, extension thật trong Chromium) đạt trên cả hai: đặt
-  thêm kết nối ⟶ upload 50 MB multipart ⟶ duyệt ⟶ đổi tên ⟶ presign rồi tải link từ ngoài extension ⟶
+- `tests/e2e/extension.spec.ts` (Playwright, extension thật trong Chromium) đạt trên cả ba: thêm
+  kết nối ⟶ upload 50 MB multipart ⟶ duyệt ⟶ đổi tên ⟶ presign rồi tải link từ ngoài extension ⟶
   download qua trình tải của trình duyệt ⟶ xoá thư mục ⟶ tải lại trang, kết nối vẫn còn.
 
-¹ Cả hai server trả danh sách bucket **đã lọc** cho khoá phạm vi hẹp thay vì `AccessDenied` (MinIO
-lọc kể cả khi policy cấm hẳn `s3:ListAllMyBuckets`), nên kết nối hoạt động bình thường. Nhánh dự
+¹ Cả ba server trả danh sách bucket **đã lọc** (Ceph: danh sách rỗng) cho khoá phạm vi hẹp thay vì
+`AccessDenied` (MinIO lọc kể cả khi policy cấm hẳn `s3:ListAllMyBuckets`), nên kết nối hoạt động bình
+thường; danh sách rỗng thì giao diện tự hiện ô "Mở bucket theo tên". Nhánh dự
 phòng (`ListBuckets` bị từ chối ⟶ `HeadBucket` bucket mặc định) chỉ được kiểm bằng unit test
 (`tests/unit/test-connection.test.ts`); cần xác nhận trên nhà cung cấp trả `AccessDenied` thật.
 
@@ -34,14 +36,18 @@ phòng (`ListBuckets` bị từ chối ⟶ `HeadBucket` bucket mặc định) ch
 (`RELEASE.2025-10-15` chỉ còn mã nguồn); Docker Hub và Quay không còn cho kéo image công khai, nên
 kiểm bằng binary chính thức (đối chiếu sha256) thay cho image Docker.
 
+³ Ceph Squid 19.2.3, RGW sau một reverse proxy HTTPS. Endpoint thử không có DNS wildcard
+`*.<host>`, nên chỉ kiểm được path-style; virtual-hosted cần DNS wildcard và chứng chỉ tương ứng.
+
 ## Khác biệt nhà cung cấp đã gặp
 
-| Nhà cung cấp              | Khác biệt                                                                                                                                                  | Cách xử lý                                                                                                                                                                                                 |
-| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| SeaweedFS                 | Lưu thư mục thật: sau khi xoá hoặc chuyển hết object, thư mục rỗng vẫn hiện trong `CommonPrefixes`. Xoá key thư mục **không** xoá đệ quy object bên trong. | Sau khi xoá/chuyển thư mục, xoá thêm key của từng thư mục từ sâu ra nông (`removeFolderEntries` trong `src/core/s3/operations/delete-objects.ts`). Trên server S3 chuẩn các lệnh này không có tác dụng gì. |
-| SeaweedFS                 | Mỗi bucket là một "collection" có volume riêng; `-volume.max=0` mặc định nhanh chóng hết chỗ khi tạo nhiều bucket thử nghiệm.                              | `docker-compose.yml` đặt `-volume.max=100`. Chỉ ảnh hưởng server thử nghiệm.                                                                                                                               |
-| Mọi server không phải AWS | SDK gửi checksum CRC32 cho `DeleteObjects` kể cả khi `WHEN_REQUIRED`; nhiều server đòi `Content-MD5`.                                                      | Middleware trong `s3-client-factory.ts` luôn đổi sang `Content-MD5` cho mọi endpoint.                                                                                                                      |
-| `localhost`, địa chỉ IP   | Không có tên miền con `<bucket>.<host>`, nên virtual-hosted không dùng được.                                                                               | `effectiveAddressing` (`src/core/profiles/addressing.ts`) luôn dùng path-style cho các host này; form kết nối khoá lựa chọn virtual-hosted.                                                                |
+| Nhà cung cấp                | Khác biệt                                                                                                                                                  | Cách xử lý                                                                                                                                                                                                 |
+| --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| SeaweedFS                   | Lưu thư mục thật: sau khi xoá hoặc chuyển hết object, thư mục rỗng vẫn hiện trong `CommonPrefixes`. Xoá key thư mục **không** xoá đệ quy object bên trong. | Sau khi xoá/chuyển thư mục, xoá thêm key của từng thư mục từ sâu ra nông (`removeFolderEntries` trong `src/core/s3/operations/delete-objects.ts`). Trên server S3 chuẩn các lệnh này không có tác dụng gì. |
+| SeaweedFS                   | Mỗi bucket là một "collection" có volume riêng; `-volume.max=0` mặc định nhanh chóng hết chỗ khi tạo nhiều bucket thử nghiệm.                              | `docker-compose.yml` đặt `-volume.max=100`. Chỉ ảnh hưởng server thử nghiệm.                                                                                                                               |
+| Ceph RGW (placement có tag) | Cụm đặt tag cho placement (ví dụ `ssd`): user mới chưa được gắn tag thì `CreateBucket` bị `AccessDenied` ("user not permitted to use placement rule").     | Việc của quản trị cụm: gắn đúng `placement_tags` cho user (`radosgw-admin metadata put user:<uid>`). Extension hiện lỗi "Không có quyền" như bình thường.                                                  |
+| Mọi server không phải AWS   | SDK gửi checksum CRC32 cho `DeleteObjects` kể cả khi `WHEN_REQUIRED`; nhiều server đòi `Content-MD5`.                                                      | Middleware trong `s3-client-factory.ts` luôn đổi sang `Content-MD5` cho mọi endpoint.                                                                                                                      |
+| `localhost`, địa chỉ IP     | Không có tên miền con `<bucket>.<host>`, nên virtual-hosted không dùng được.                                                                               | `effectiveAddressing` (`src/core/profiles/addressing.ts`) luôn dùng path-style cho các host này; form kết nối khoá lựa chọn virtual-hosted.                                                                |
 
 ## Kiểm một nhà cung cấp
 

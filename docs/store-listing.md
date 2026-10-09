@@ -1,15 +1,15 @@
 # Nội dung nộp store (Chrome Web Store, Edge Add-ons)
 
-Bản nháp để dán khi nộp tay. Tên extension **chưa chốt** (câu hỏi mở của plan); "S3 Object Manager"
-là tên tạm, nằm ở `public/_locales/{vi,en}/messages.json` và `src/i18n/{vi,en}.json` (`app.title`).
-Không dùng tên, logo hay nhận diện của thương hiệu khác.
+Bản nháp để dán khi nộp tay. Tên extension: **Kho Mây** (chốt 09/10/2026), nằm ở
+`public/_locales/{vi,en}/messages.json` và `src/i18n/{vi,en}.json` (`app.title`). Tên không chứa nhãn
+hiệu của bên khác; "S3" chỉ xuất hiện trong mô tả dưới dạng "tương thích S3".
 
 ## Mô tả ngắn
 
-- vi: Duyệt, tải lên, tải xuống và chia sẻ object trên mọi dịch vụ lưu trữ tương thích S3. Kết nối lưu
-  trên máy, không telemetry.
-- en: Browse, upload, download and share objects on any S3-compatible storage. Connections stay
-  on your machine, no telemetry.
+Lấy từ `extDescription` trong `public/_locales/{vi,en}/messages.json`:
+
+- vi: Duyệt, tải lên, tải xuống và chia sẻ tệp trên kho lưu trữ đám mây tương thích S3. Dễ dùng, không cần cài phần mềm, kết nối chỉ lưu trên máy bạn.
+- en: Browse, upload, download and share files on S3-compatible cloud storage. Easy to use, nothing to install, connections stay on your machine.
 
 ## Mô tả dài (vi)
 

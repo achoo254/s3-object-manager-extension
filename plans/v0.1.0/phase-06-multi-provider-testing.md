@@ -1,6 +1,6 @@
 # Phase 6 — Kiểm thử đa nhà cung cấp và đo performance
 
-Tier: **M** · Phụ thuộc: phase 3, 4, 5 · Trạng thái: một phần · Issue: #6
+Tier: **M** · Phụ thuộc: phase 3, 4, 5 · Trạng thái: gần xong (còn Backblaze B2) · Issue: #6
 
 ## Mục tiêu
 
@@ -64,3 +64,10 @@ Ngưỡng không đạt ⟹ nêu nguyên nhân khả dĩ và đề xuất, khôn
 ## Rủi ro
 
 - Máy dev ít RAM: không chạy Playwright song song với build/test nặng khác; chạy e2e một worker.
+
+## Cập nhật 09/10/2026
+
+- Ceph RGW 19.2.3 (cụm lab 3 node, path-style): tích hợp 10/10 với user thường và với user phạm vi hẹp (bucket policy), e2e 2/2.
+- Đo qua mạng thật trên Ceph: cả 5 ngưỡng đạt, thông lượng 104% `aws s3 cp` (docs/performance.md). Ngưỡng thông lượng coi là đạt; giữ mặc định 4 × 8 MiB.
+- Còn lại: Backblaze B2 (chờ tài khoản của chủ dự án).
+

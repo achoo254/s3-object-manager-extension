@@ -1,4 +1,4 @@
-# S3 Object Manager (tên tạm)
+# Kho Mây
 
 Extension Chrome/Edge (Manifest V3) để duyệt, tải lên, tải xuống, xoá, đổi tên và chia sẻ object trên
 dịch vụ lưu trữ tương thích S3 — chỉ cần endpoint và cặp khoá truy cập. Giao diện tiếng Việt là chính,
@@ -43,7 +43,6 @@ ma trận thì chưa được coi là "hỗ trợ". Số đo hiệu năng: [docs
   khác lên cùng key.
 - Đổi tên/di chuyển thư mục làm từng object (sao chép rồi xoá), không nguyên tử; bị ngắt giữa chừng
   thì extension liệt kê phần còn lại để chạy tiếp.
-- Trên loopback, thông lượng upload đạt khoảng 57% `aws s3 cp` (xem docs/performance.md).
 - Firefox, IAM/policy, versioning, lifecycle, đồng bộ thư mục: ngoài phạm vi.
 
 ## Phát triển

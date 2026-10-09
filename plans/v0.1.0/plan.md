@@ -123,17 +123,17 @@ Playwright**. Phiên bản chốt cứng lúc scaffold, chọn bản phát hành
 
 Phase 3 và 4 làm song song được (tệp tách biệt: `src/features/browser/**` vs `src/features/upload/**`).
 
-## Tiến độ (08/10/2026)
+## Tiến độ (09/10/2026)
 
 | # | Trạng thái | Còn lại |
 |---|---|---|
-| 1 | Xong, CI xanh trên GitHub | Bật secret scanning/push protection, chạy `scripts/install-git-hooks.sh` trên máy, chứng thực dương trên nhánh thử |
-| 2 | Xong | Kiểm tay hộp thoại cấp quyền thật (bản e2e cấp sẵn `http://localhost`) |
+| 1 | Xong | Cài hook trên máy (`scripts/install-git-hooks.sh`, cần biến `FORBIDDEN_TERMS_REGEX`) và đặt secret đó cho Dependabot. Cổng từ cấm đã tự chứng thực trên CI (bắt đúng một dòng vi phạm thật trong plan); secret scanning + push protection đã bật |
+| 2 | Xong (đổi hướng 09/10: bỏ passphrase) | — Hộp thoại cấp quyền thật đã dùng trên Edge với endpoint lab |
 | 3 | Xong | — |
-| 4 | Xong | Kiểm tay tắt mạng giữa chừng trong trình duyệt thật (logic tiếp tục đã kiểm bằng test tích hợp) |
-| 5 | Xong | Đi tay hết màn hình với trình duyệt tiếng Việt (đã soát bằng ảnh chụp) |
-| 6 | Một phần | SeaweedFS + MinIO đạt mọi ô (tích hợp + e2e); Ceph RGW và B2 cần tài nguyên của chủ dự án (các bước trong docs/compatibility.md); thông lượng đo trên loopback dao động 57–139%, chờ đo qua mạng thật |
-| 7 | Chuẩn bị xong | Chốt tên, đăng trang privacy (GitHub Pages), tài khoản store + 2FA, tag `v0.1.0`, nộp hai store |
+| 4 | Xong | Kiểm tay tắt mạng giữa chừng trong trình duyệt thật (logic tiếp tục đã có test tích hợp trên 3 server) |
+| 5 | Xong | — |
+| 6 | Gần xong | SeaweedFS, MinIO, Ceph RGW (path-style) đạt mọi ô; Backblaze B2 chờ tài khoản của chủ dự án; số đo qua mạng thật trên Ceph ở docs/performance.md |
+| 7 | Chuẩn bị xong | Tên **Kho Mây**; trang privacy trên GitHub Pages; còn tài khoản store + 2FA, tag `v0.1.0`, nộp hai store |
 
 ## Rủi ro chính
 
@@ -148,7 +148,7 @@ Phase 3 và 4 làm song song được (tệp tách biệt: `src/features/browser
 
 ## Câu hỏi còn mở
 
-- Tên extension trên store (chốt ở phase 7).
+- ~~Tên extension trên store~~ — chốt **Kho Mây** (09/10/2026): dễ hiểu với người dùng phổ thông, không chứa nhãn hiệu bên khác.
 
 ## Nhật ký quyết định
 

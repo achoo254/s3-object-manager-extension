@@ -17,14 +17,14 @@ Kết quả thô nằm ở `test-results/perf.jsonl` sau mỗi lần chạy. M�
 
 ## Kết quả
 
-| Đại lượng                        | Ngưỡng                                                  | Đo được                                                                                                                                                                                      | Kết quả      |
-| -------------------------------- | ------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
-| Liệt kê thư mục 100.000 object   | Trang đầu (1.000 key) sau 1 round-trip; cuộn không giật | Trang đầu sau **1** request `ListObjectsV2`, hiện sau 127 ms. Cuộn 2.000 khung hình (~33 s, ~60 khung/giây) qua danh sách ảo hoá: **0** long task (> 50 ms); trong lúc cuộn tải thêm 6 trang | **Đạt**      |
-| Xoá thư mục 10.000 object        | ≤ 10 request `DeleteObjects`                            | **10** `DeleteObjects` (1.000 key/request) + 1 `DeleteObject` cho chính mục thư mục rỗng; 1,8 s                                                                                              | **Đạt**      |
-| Thông lượng upload file 2 GB     | ≥ 80% `aws s3 cp`                                       | Extension 324 MiB/s (5,3 / 6,3 / 7,8 s), `aws s3 cp` 571 MiB/s (3,5 / 3,6 / 3,6 s) ⟹ **57%**                                                                                                 | **Chưa đạt** |
-| — cùng phép đo, 8 part song song | (tham khảo)                                             | Extension 350 MiB/s, `aws s3 cp` 582 MiB/s ⟹ 60%                                                                                                                                             | —            |
-| RAM tab khi upload file 5 GB     | tăng ≤ 4 × 8 MiB + 50 MB = 82 MiB                       | Renderer của extension: nền 229 MiB, đỉnh **+0 MiB** (25 mẫu, 12,9 s, ~398 MiB/s)                                                                                                            | **Đạt**      |
-| RAM tab khi download file 5 GB   | không tăng theo cỡ file                                 | Renderer của extension: nền 160 MiB, đỉnh **+5 MiB** (89 mẫu, 44,9 s)                                                                                                                        | **Đạt**      |
+| Đại lượng                        | Ngưỡng                                                  | Đo được                                                                                                                                                                                      | Kết quả                                                   |
+| -------------------------------- | ------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
+| Liệt kê thư mục 100.000 object   | Trang đầu (1.000 key) sau 1 round-trip; cuộn không giật | Trang đầu sau **1** request `ListObjectsV2`, hiện sau 127 ms. Cuộn 2.000 khung hình (~33 s, ~60 khung/giây) qua danh sách ảo hoá: **0** long task (> 50 ms); trong lúc cuộn tải thêm 6 trang | **Đạt**                                                   |
+| Xoá thư mục 10.000 object        | ≤ 10 request `DeleteObjects`                            | **10** `DeleteObjects` (1.000 key/request) + 1 `DeleteObject` cho chính mục thư mục rỗng; 1,8 s                                                                                              | **Đạt**                                                   |
+| Thông lượng upload file 2 GB     | ≥ 80% `aws s3 cp`                                       | Extension 324 MiB/s (5,3 / 6,3 / 7,8 s), `aws s3 cp` 571 MiB/s (3,5 / 3,6 / 3,6 s) ⟹ **57%**                                                                                                 | Thấp hơn trên loopback (qua mạng thật: **đạt**, xem dưới) |
+| — cùng phép đo, 8 part song song | (tham khảo)                                             | Extension 350 MiB/s, `aws s3 cp` 582 MiB/s ⟹ 60%                                                                                                                                             | —                                                         |
+| RAM tab khi upload file 5 GB     | tăng ≤ 4 × 8 MiB + 50 MB = 82 MiB                       | Renderer của extension: nền 229 MiB, đỉnh **+0 MiB** (25 mẫu, 12,9 s, ~398 MiB/s)                                                                                                            | **Đạt**                                                   |
+| RAM tab khi download file 5 GB   | không tăng theo cỡ file                                 | Renderer của extension: nền 160 MiB, đỉnh **+5 MiB** (89 mẫu, 44,9 s)                                                                                                                        | **Đạt**                                                   |
 
 ### Cách đo RAM
 
@@ -45,10 +45,27 @@ MinIO `RELEASE.2025-09-07T16-13-09Z` (binary, một ổ đĩa), cùng phép đo 
 Trên loopback, cả hai công cụ dao động hơn gấp ba lần giữa các lượt (đĩa, cache hệ điều hành, việc nền
 của server), nên tỉ lệ 57% đo trên SeaweedFS không đủ chắc để kết luận extension chậm hơn.
 
-## Thông lượng chưa đạt: nguyên nhân khả dĩ và đề xuất
+## Kết quả qua mạng thật: Ceph RGW (09/10/2026)
 
-Không hạ ngưỡng. Quyết định đã chọn (08/10/2026): giữ mặc định 4 × 8 MiB, đo lại qua mạng thật rồi
-mới quyết. Những gì số đo cho thấy:
+Cụm Ceph Squid 19.2.3 (3 node, lab) truy cập từ cùng máy đo qua VPN (băng thông thực tế ~9,5 MiB/s);
+cùng bản build, cùng lệnh `pnpm perf`, khoá của một user RGW tạm thời.
+
+| Đại lượng                      | Ngưỡng                                      | Đo được                                                                              | Kết quả |
+| ------------------------------ | ------------------------------------------- | ------------------------------------------------------------------------------------ | ------- |
+| Liệt kê thư mục 100.000 object | Trang đầu sau 1 round-trip; cuộn không giật | Trang đầu sau **1** request, hiện sau 441 ms; cuộn 2.000 khung hình, **0** long task | **Đạt** |
+| Xoá thư mục 10.000 object      | ≤ 10 request `DeleteObjects`                | **10** `DeleteObjects` + 1 `DeleteObject` mục thư mục; 11,9 s                        | **Đạt** |
+| Thông lượng upload file 2 GB   | ≥ 80% `aws s3 cp`                           | Extension 216,4 / 216,4 / 215,1 s, `aws s3 cp` 226,4 / 225,8 / 225,0 s ⟹ **104%**    | **Đạt** |
+| RAM tab khi upload file 5 GB   | tăng ≤ 82 MiB                               | **+25 MiB** (542 s)                                                                  | **Đạt** |
+| RAM tab khi download file 5 GB | không tăng theo cỡ file                     | **+4 MiB** (547 s)                                                                   | **Đạt** |
+
+Qua mạng thật, cả hai công cụ đều bị giới hạn bởi băng thông, và extension nhanh ngang hoặc hơn
+`aws s3 cp`. Kết luận cho ngưỡng thông lượng: **đạt**; các con số trên loopback bên dưới chỉ phản ánh
+chi phí cố định mỗi request của trình duyệt khi băng thông không giới hạn.
+
+## Thông lượng trên loopback: phân tích
+
+Quyết định 08/10/2026: giữ mặc định 4 × 8 MiB, đo lại qua mạng thật rồi mới quyết — đã đo ngày
+09/10 (mục trên), ngưỡng đạt nên giữ nguyên mặc định. Những gì số đo cho thấy:
 
 - Tăng từ 4 lên 8 part song song chỉ nhích từ 324 lên 350 MiB/s, nên số luồng **không** phải nút
   thắt chính.
@@ -66,18 +83,16 @@ Các hướng đã cân nhắc:
    tăng trần RAM lên 4 × 16 MiB + 50 MB.
 3. Đổi định nghĩa ngưỡng sang "≥ 80% của `aws s3 cp` trên endpoint qua mạng".
 
-## Chưa đo
+## Đo lại trên endpoint khác
 
-- Các phép đo trên **Ceph RGW** qua mạng thật (cần cụm thử nghiệm riêng, không có trong phiên này).
-  Đây là bước tiếp theo đã chọn cho ngưỡng thông lượng: giữ mặc định, đo lại qua mạng rồi mới quyết.
-  Lệnh (khoá chỉ dùng để thử, không commit):
+Lệnh (khoá chỉ dùng để thử, không commit):
 
-  ```bash
-  E2E_EXTRA_HOSTS='https://<host>/*' pnpm build:e2e
-  PERF_ONLY=throughput PERF_S3_ENDPOINT=https://<endpoint> PERF_S3_REGION=<region> \
-  PERF_S3_ACCESS_KEY_ID=... PERF_S3_SECRET_ACCESS_KEY=... PERF_AWS_CLI=<đường dẫn aws> pnpm perf
-  ```
+```bash
+E2E_EXTRA_HOSTS='https://<host>/*' pnpm build:e2e
+PERF_S3_ENDPOINT=https://<endpoint> PERF_S3_REGION=<region> \
+PERF_S3_ACCESS_KEY_ID=... PERF_S3_SECRET_ACCESS_KEY=... PERF_AWS_CLI=<đường dẫn aws> pnpm perf
+```
 
-  Khoá cần quyền tạo/xoá bucket (mỗi lượt đo dùng một bucket tạm). `E2E_EXTRA_HOSTS` cấp sẵn quyền
-  truy cập endpoint cho bản build e2e (Playwright không bấm được hộp thoại xin quyền); bản phát hành
-  không bị ảnh hưởng.
+Khoá cần quyền tạo/xoá bucket (mỗi lượt đo dùng một bucket tạm). `E2E_EXTRA_HOSTS` cấp sẵn quyền truy
+cập endpoint cho bản build e2e (Playwright không bấm được hộp thoại xin quyền); bản phát hành không bị
+ảnh hưởng.
