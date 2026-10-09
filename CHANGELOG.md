@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.0 — chưa phát hành
+## 0.1.0 — 09/10/2026
 
 Bản đầu tiên.
 
