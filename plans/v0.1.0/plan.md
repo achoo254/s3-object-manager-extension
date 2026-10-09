@@ -176,4 +176,4 @@ Phase 3 và 4 làm song song được (tệp tách biệt: `src/features/browser
 | Nền giao diện | Vuetify 3 Material Design 3 + token riêng | Đủ bảng dữ liệu, danh sách ảo hoá, dialog, form; giấy phép MIT |
 | Backend/proxy | Không | Credentials ở lại máy người dùng; extension không bị CORS chặn |
 | Passphrase cho credentials (09/10/2026, chủ dự án quyết) | **Bỏ**: lưu xong dùng ngay | Người dùng mục tiêu là người phổ thông, ít kỹ thuật. Không có bí mật của người dùng thì mã hoá chỉ để che mắt; ghi rõ trong privacy |
-| Giữ kết nối khi cập nhật bản thử (09/10/2026) | ID extension cố định cho bản pre-release (khoá manifest chỉ thêm khi `PRERELEASE_BUILD=1`); vault passphrase cũ bị bỏ | Chọn qua Jev; store tự cấp ID nên bản store không mang khoá |
+| Giữ kết nối khi cập nhật bản thử (09/10/2026) | ID extension cố định cho bản pre-release (khoá manifest chỉ thêm khi `PRERELEASE_BUILD=1`); vault passphrase cũ bị bỏ | Store tự cấp ID nên bản store không mang khoá |
