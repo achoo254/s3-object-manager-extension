@@ -9,6 +9,13 @@ updates:
     cooldown:
       default-days: 14
     open-pull-requests-limit: 5
+    ignore:
+      # The plan builds the UI on Vuetify 3; a move to Vuetify 4 is its own decision.
+      - dependency-name: vuetify
+        update-types: ['version-update:semver-major']
+      # Types follow the Node 24 runtime used in CI and development.
+      - dependency-name: '@types/node'
+        versions: ['>=25']
     # Keep exact versions (no ^ ranges) in package.json.
     versioning-strategy: increase
   - package-ecosystem: github-actions
