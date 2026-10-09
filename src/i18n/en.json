@@ -1,6 +1,6 @@
 {
   "app": {
-    "title": "S3 Object Manager",
+    "title": "Kho Mây",
     "welcome": {
       "title": "Pick or add a connection",
       "body": "A connection is an endpoint address plus an access key pair. Pick one in the left column, or click “Add connection”."

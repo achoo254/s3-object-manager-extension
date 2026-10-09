@@ -1,6 +1,6 @@
 {
   "app": {
-    "title": "Quản lý object S3",
+    "title": "Kho Mây",
     "welcome": {
       "title": "Chọn hoặc thêm một kết nối",
       "body": "Mỗi kết nối gồm địa chỉ endpoint và cặp khoá truy cập. Chọn một kết nối ở cột bên trái, hoặc bấm “Thêm kết nối”."
