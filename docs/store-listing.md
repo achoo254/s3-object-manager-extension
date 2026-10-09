@@ -7,9 +7,9 @@ nghĩa mô tả; không dùng logo hay nhận diện của Amazon và không ghi
 
 ## Mô tả ngắn
 
-Lấy từ `extDescription` trong `public/_locales/{vi,en}/messages.json`:
+Lấy từ `extDescription` trong `public/_locales/{vi,en}/messages.json` (tối đa 132 ký tự, có test kiểm):
 
-- vi: Duyệt, tải lên, tải xuống và chia sẻ object trên mọi dịch vụ lưu trữ tương thích S3. Không cần cài phần mềm, kết nối chỉ lưu trên máy bạn.
+- vi: Duyệt, tải lên, tải xuống, chia sẻ object trên lưu trữ tương thích S3. Không cần cài phần mềm, kết nối chỉ lưu trên máy bạn.
 - en: Browse, upload, download and share objects on any S3-compatible storage. Nothing to install, connections stay on your machine.
 
 ## Mô tả dài (vi)

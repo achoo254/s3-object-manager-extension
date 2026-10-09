@@ -2,7 +2,7 @@
   "name": "s3-object-manager-extension",
   "description": "Browser extension for managing objects on any S3-compatible endpoint",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "license": "MIT",
   "packageManager": "pnpm@11.9.0",

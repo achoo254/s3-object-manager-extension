@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.1 — 09/10/2026
+
+- Rút gọn mô tả trong manifest cho vừa giới hạn 132 ký tự của Chrome Web Store.
+
 ## 0.1.0 — 09/10/2026
 
 Bản đầu tiên.

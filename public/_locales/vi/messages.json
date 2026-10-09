@@ -4,7 +4,7 @@
     "description": "Tên extension"
   },
   "extDescription": {
-    "message": "Duyệt, tải lên, tải xuống và chia sẻ object trên mọi dịch vụ lưu trữ tương thích S3. Không cần cài phần mềm, kết nối chỉ lưu trên máy bạn.",
+    "message": "Duyệt, tải lên, tải xuống, chia sẻ object trên lưu trữ tương thích S3. Không cần cài phần mềm, kết nối chỉ lưu trên máy bạn.",
     "description": "Mô tả extension trên store"
   }
 }
