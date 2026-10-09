@@ -61,7 +61,21 @@ Compatible with S3-standard storage services. Tested on SeaweedFS, MinIO and Cep
 | `downloads`                                                                     | Giao object cho trình tải của trình duyệt để tải file lớn mà không giữ trong bộ nhớ.                                                                             |
 | Quyền host tuỳ chọn (`https://*/*`, `http://localhost/*`, `http://127.0.0.1/*`) | Gọi API S3 của endpoint người dùng chọn. Không cấp lúc cài; xin theo từng origin khi người dùng thêm kết nối. `http` chỉ dành cho server S3 trên máy người dùng. |
 
-## Ảnh chụp màn hình (1280×800)
+## Hình ảnh
 
-`docs/store/screenshots/{vi,en}-{2..6}-*.png`, tạo lại bằng `pnpm build:e2e && pnpm screenshots`
-(dữ liệu mẫu trên SeaweedFS local, không có endpoint thật). Chụp lại sau khi chốt tên extension.
+Tải tất cả một lần: `store-assets.zip` trong bản phát hành mới nhất trên GitHub Releases.
+
+| Ô trên store                          | Tệp                                      | Ghi chú                                                                      |
+| ------------------------------------- | ---------------------------------------- | ---------------------------------------------------------------------------- |
+| Biểu tượng cửa hàng (128×128)         | `docs/store/store-icon-128.png`          | Hình 96×96, chừa 16px trong suốt mỗi bên theo hướng dẫn của Chrome Web Store |
+| Ảnh chụp màn hình đã bản địa hoá (vi) | `docs/store/screenshots/vi-{2..6}-*.png` | 1280×800, PNG 24-bit (RGB, không alpha)                                      |
+| Ảnh chụp hiển thị ở mọi ngôn ngữ (en) | `docs/store/screenshots/en-{2..6}-*.png` | 1280×800, PNG 24-bit                                                         |
+| Ô quảng cáo nhỏ (440×280)             | `docs/store/promo-small-440x280.png`     | PNG 24-bit                                                                   |
+| Video quảng cáo                       | —                                        | Không bắt buộc, bỏ trống                                                     |
+
+Ảnh chụp tạo lại bằng `pnpm build:e2e && pnpm screenshots` (dữ liệu mẫu trên SeaweedFS local, không có
+endpoint thật).
+
+## Danh mục
+
+Chrome Web Store: **Năng suất → Công cụ** (Productivity → Tools). Edge Add-ons: **Productivity**.
