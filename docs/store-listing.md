@@ -68,6 +68,7 @@ Tải tất cả một lần: `store-assets.zip` trong bản phát hành mới n
 | Ô trên store                          | Tệp                                      | Ghi chú                                                                      |
 | ------------------------------------- | ---------------------------------------- | ---------------------------------------------------------------------------- |
 | Biểu tượng cửa hàng (128×128)         | `docs/store/store-icon-128.png`          | Hình 96×96, chừa 16px trong suốt mỗi bên theo hướng dẫn của Chrome Web Store |
+| Logo Edge Add-ons (300×300)           | `docs/store/edge-logo-300.png`           | Bắt buộc với Edge; nền trong suốt                                            |
 | Ảnh chụp màn hình đã bản địa hoá (vi) | `docs/store/screenshots/vi-{2..6}-*.png` | 1280×800, PNG 24-bit (RGB, không alpha)                                      |
 | Ảnh chụp hiển thị ở mọi ngôn ngữ (en) | `docs/store/screenshots/en-{2..6}-*.png` | 1280×800, PNG 24-bit                                                         |
 | Ô quảng cáo nhỏ (440×280)             | `docs/store/promo-small-440x280.png`     | PNG 24-bit                                                                   |
