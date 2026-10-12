@@ -1,6 +1,6 @@
 # Changelog
 
-## Chưa phát hành
+## 0.1.2 — 12/10/2026
 
 - Sửa: khoá chỉ được chia sẻ một bucket qua bucket policy (Ceph, AWS) báo "thấy 0 bucket" và rơi vào
   danh sách trống. Nay "Thử kết nối" kiểm bucket mặc định và extension mở thẳng bucket đó; bucket
