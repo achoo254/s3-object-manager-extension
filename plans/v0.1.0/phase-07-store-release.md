@@ -61,3 +61,5 @@ trình đóng gói lặp lại được từ tag git.
   của MinIO (khoá do MinIO công bố), dự phòng chạy MinIO local.
 - Logo 300×300 bắt buộc cho Edge: `docs/store/edge-logo-300.png`.
 - Còn lại: chờ hai store duyệt; khi có link store, thêm vào README và đánh dấu phase xong.
+- Chrome Web Store: đã xuất bản bản 0.1.1, ID `bbemiekmmjidgnnllkmmcnehbkpomlhp`,
+  https://chromewebstore.google.com/detail/s3-object-manager/bbemiekmmjidgnnllkmmcnehbkpomlhp. README đã có link.
