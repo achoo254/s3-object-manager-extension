@@ -28,7 +28,10 @@ Bằng chứng (08–09/10/2026; SeaweedFS và MinIO chạy binary trên cùng m
 
 ¹ Cả ba server trả danh sách bucket **đã lọc** (Ceph: danh sách rỗng) cho khoá phạm vi hẹp thay vì
 `AccessDenied` (MinIO lọc kể cả khi policy cấm hẳn `s3:ListAllMyBuckets`), nên kết nối hoạt động bình
-thường; danh sách rỗng thì giao diện tự hiện ô "Mở bucket theo tên". Nhánh dự
+thường. Khi kết nối có bucket mặc định mà bucket đó không nằm trong danh sách (Ceph: bucket được
+chia sẻ qua bucket policy, khoá không sở hữu bucket nào), "Thử kết nối" kiểm bucket mặc định bằng
+`HeadBucket`, và danh sách rỗng thì mở thẳng bucket mặc định; không có bucket mặc định thì hiện ô
+"Mở bucket theo tên". Kịch bản này có e2e trên cả ba server (`tests/e2e/features.spec.ts`). Nhánh dự
 phòng (`ListBuckets` bị từ chối ⟶ `HeadBucket` bucket mặc định) chỉ được kiểm bằng unit test
 (`tests/unit/test-connection.test.ts`); cần xác nhận trên nhà cung cấp trả `AccessDenied` thật.
 

@@ -24,6 +24,39 @@ describe('testConnection', () => {
     expect(calls[1]).toMatchObject({ command: 'HeadBucketCommand', input: { Bucket: 'scoped' } });
   });
 
+  it('checks a default bucket the key can use but does not own', async () => {
+    const { client, calls } = fakeS3Client({
+      ListBucketsCommand: () => ({ Buckets: [] }),
+      HeadBucketCommand: () => ({}),
+    });
+    await expect(testConnection(client, 'shared')).resolves.toEqual({
+      kind: 'defaultBucketOnly',
+      bucket: 'shared',
+    });
+    expect(calls[1]).toMatchObject({ command: 'HeadBucketCommand', input: { Bucket: 'shared' } });
+  });
+
+  it('reports a listed default bucket as a normal listing', async () => {
+    const { client, calls } = fakeS3Client({
+      ListBucketsCommand: () => ({ Buckets: [{ Name: 'shared' }] }),
+    });
+    await expect(testConnection(client, 'shared')).resolves.toEqual({
+      kind: 'listBuckets',
+      bucketCount: 1,
+    });
+    expect(calls).toHaveLength(1);
+  });
+
+  it('fails when the default bucket is neither listed nor reachable', async () => {
+    const { client } = fakeS3Client({
+      ListBucketsCommand: () => ({ Buckets: [{ Name: 'other' }] }),
+      HeadBucketCommand: () => {
+        throw s3Error('NoSuchBucket', 404);
+      },
+    });
+    await expect(testConnection(client, 'typo')).rejects.toMatchObject({ name: 'NoSuchBucket' });
+  });
+
   it('fails when ListBuckets is denied and no default bucket is known', async () => {
     const { client } = fakeS3Client({
       ListBucketsCommand: () => {

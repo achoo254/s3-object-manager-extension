@@ -9,7 +9,12 @@ import { s3ErrorCode } from '@/core/s3/s3-error';
 import ErrorAlert from '@/features/shared/ErrorAlert.vue';
 import { formatDateTime } from '@/features/shared/format';
 
-const props = defineProps<{ profile: ConnectionProfile; client: S3Client }>();
+const props = defineProps<{
+  profile: ConnectionProfile;
+  client: S3Client;
+  /** Go straight to the default bucket when the list has nothing to choose from. */
+  openDefault: boolean;
+}>();
 const emit = defineEmits<{ open: [bucket: string]; listDenied: [] }>();
 const { t, locale } = useI18n();
 
@@ -42,6 +47,11 @@ async function load() {
     );
     buckets.value = response.Buckets ?? [];
     loaded.value = true;
+    // A key that owns no bucket but was granted one (bucket policy) lists nothing: the list is
+    // useless, so open the default bucket as for a key without ListBuckets.
+    if (props.openDefault && buckets.value.length === 0 && props.profile.defaultBucket) {
+      emit('open', props.profile.defaultBucket);
+    }
   } catch (e) {
     // A scoped key without ListBuckets is normal: go straight to its default bucket.
     if (s3ErrorCode(e) === 'AccessDenied' && props.profile.defaultBucket) {

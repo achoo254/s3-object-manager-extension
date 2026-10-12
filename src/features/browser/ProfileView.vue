@@ -11,6 +11,8 @@ const connections = useConnections();
 
 const bucket = ref('');
 const prefix = ref('');
+/** Once the user goes back to the bucket list, it no longer jumps to the default bucket. */
+const listRequested = ref(false);
 const hasAccess = computed(() => connections.hostAccess.value[props.profile.id] === true);
 // No network call is made before the user has granted access to the endpoint.
 const client = computed(() => (hasAccess.value ? connections.clientFor(props.profile) : undefined));
@@ -20,8 +22,14 @@ watch(
   () => {
     bucket.value = '';
     prefix.value = '';
+    listRequested.value = false;
   },
 );
+
+function showBuckets() {
+  bucket.value = '';
+  listRequested.value = true;
+}
 
 function openBucket(name: string) {
   bucket.value = name;
@@ -37,7 +45,14 @@ function openBucket(name: string) {
     :profile="profile"
     :client="client"
     :bucket="bucket"
-    @buckets="bucket = ''"
+    @buckets="showBuckets"
   />
-  <BucketList v-else :key="profile.id" :profile="profile" :client="client" @open="openBucket" />
+  <BucketList
+    v-else
+    :key="profile.id"
+    :profile="profile"
+    :client="client"
+    :open-default="!listRequested"
+    @open="openBucket"
+  />
 </template>
