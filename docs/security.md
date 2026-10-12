@@ -58,5 +58,9 @@ request: `tests/e2e/features.spec.ts`.
 - `pnpm audit`: 0 lỗ hổng ở dependency chạy trong extension. Còn 1 mức cao ở `braces` 3.0.3 (DoS do
   pattern lồng sâu), chỉ là dependency lúc build (`@intlify/unplugin-vue-i18n` ⟶ `fast-glob`), chưa có
   bản vá; pattern đưa vào đều do repo tự viết nên không khai thác được từ ngoài.
+- Gói đang phát hành (0.1.1): mã trong gói Chrome Web Store trùng từng byte với bản build lại từ tag
+  `v0.1.1` (khác duy nhất `update_url` và chữ ký `_metadata` do store thêm); mã trong gói Edge Add-ons
+  trùng với gói Chrome. Bộ e2e chạy trên chính gói Chrome Web Store đạt 28/28 (SeaweedFS), bằng
+  `E2E_EXTENSION_PATH=<thư mục gói đã giải nén, thêm host_permissions của server thử>`.
 - Lần chạy này tìm ra một lỗi chức năng (khoá được chia sẻ bucket qua bucket policy); đã sửa, xem
   `CHANGELOG.md`.

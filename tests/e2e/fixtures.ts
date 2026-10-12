@@ -1,7 +1,11 @@
 import { chromium, test as base, type BrowserContext, type Page } from '@playwright/test';
 import { fileURLToPath } from 'node:url';
 
-const extensionPath = fileURLToPath(new URL('../../.output/chrome-mv3-e2e', import.meta.url));
+// E2E_EXTENSION_PATH runs the suite against another unpacked build, e.g. a published package with
+// the test server added to `host_permissions` (what clicking "Allow" grants).
+const extensionPath =
+  process.env.E2E_EXTENSION_PATH ??
+  fileURLToPath(new URL('../../.output/chrome-mv3-e2e', import.meta.url));
 
 export const test = base.extend<{
   context: BrowserContext;
