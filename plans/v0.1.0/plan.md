@@ -13,7 +13,7 @@ created: 2026-10-08
 
 # MVP v0.1.0 — extension quản lý object S3
 
-Trạng thái: đang làm (mã phase 1–5 xong, phase 6 một phần, phase 7 chờ tài khoản store) · Tạo 08/10/2026 · Tier tổng: **M** (~7 module)
+Trạng thái: đang làm (mã phase 1–5 xong, phase 6 một phần, phase 7 đã nộp store, chờ duyệt) · Tạo 08/10/2026 · Tier tổng: **M** (~7 module)
 
 Danh sách việc: milestone `v0.1.0`, issue theo dõi **#8**, mỗi phase một issue (#1–#7).
 

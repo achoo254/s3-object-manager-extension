@@ -53,3 +53,11 @@ trình đóng gói lặp lại được từ tag git.
 - Ảnh store chụp lại với tên mới; secret scanning + push protection đã bật.
 - Còn lại (cần chủ dự án): tài khoản Chrome Web Store + Edge Partner Center (2FA), tag `v0.1.0`, nộp, xử lý review.
 
+
+## Cập nhật 12/10/2026
+
+- Edge Add-ons: đã nộp bản 0.1.1, trạng thái "In review" (Microsoft hẹn trả lời trong 7 ngày làm việc). CRX ID
+  `opnkfhklilkdniijaljglkiflobdffgj`, Store ID `0RDCKB85MPG9`. Ghi chú cho người duyệt dùng server demo công khai
+  của MinIO (khoá do MinIO công bố), dự phòng chạy MinIO local.
+- Logo 300×300 bắt buộc cho Edge: `docs/store/edge-logo-300.png`.
+- Còn lại: chờ hai store duyệt; khi có link store, thêm vào README và đánh dấu phase xong.
