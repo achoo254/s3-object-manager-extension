@@ -41,6 +41,7 @@ ma trận thì chưa được coi là "hỗ trợ". Số đo hiệu năng: [docs
 - **Nên dùng khoá phạm vi hẹp** (chỉ những bucket cần quản lý), không dùng khoá quản trị toàn tài
   khoản.
 - Chính sách quyền riêng tư: [docs/privacy.md](docs/privacy.md).
+- Kiểm thử bảo mật (SAST/DAST) và kết quả: [docs/security.md](docs/security.md).
 
 ## Giới hạn đã biết
 

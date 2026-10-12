@@ -1,5 +1,15 @@
 # Changelog
 
+## Chưa phát hành
+
+- Sửa: khoá chỉ được chia sẻ một bucket qua bucket policy (Ceph, AWS) báo "thấy 0 bucket" và rơi vào
+  danh sách trống. Nay "Thử kết nối" kiểm bucket mặc định và extension mở thẳng bucket đó; bucket
+  mặc định gõ sai cũng bị báo lỗi ngay khi thử kết nối.
+- Kiểm thử: thêm e2e cho kết nối, duyệt, upload (tạm dừng, huỷ, tiếp tục sau khi tải lại trang, cả
+  thư mục), sao chép/di chuyển, xoá nhiều mục, thuộc tính, link chia sẻ, cài đặt, và kiểm thử bảo mật
+  động; xem [docs/security.md](docs/security.md).
+- CI: ghim GitHub Actions theo commit SHA; pnpm từ chối phiên bản phát hành chưa đủ 7 ngày.
+
 ## 0.1.1 — 09/10/2026
 
 - Rút gọn mô tả trong manifest cho vừa giới hạn 132 ký tự của Chrome Web Store.
