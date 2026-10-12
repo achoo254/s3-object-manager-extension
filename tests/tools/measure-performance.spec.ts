@@ -21,7 +21,7 @@ import { execFileSync, execSync } from 'node:child_process';
 import {
   appendFileSync,
   closeSync,
-  mkdirSync,
+  mkdtempSync,
   openSync,
   readFileSync,
   rmSync,
@@ -45,8 +45,7 @@ const GiB = 1024 ** 3;
 const MiB = 1024 ** 2;
 
 const extensionPath = fileURLToPath(new URL('../../.output/chrome-mv3-e2e', import.meta.url));
-const workDir = join(tmpdir(), `s3om-perf-${Date.now()}`);
-mkdirSync(workDir, { recursive: true });
+const workDir = mkdtempSync(join(tmpdir(), 's3om-perf-'));
 
 const admin = new S3Client({
   endpoint,

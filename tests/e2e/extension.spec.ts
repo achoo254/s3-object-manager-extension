@@ -1,24 +1,17 @@
-import {
-  CreateBucketCommand,
-  DeleteBucketCommand,
-  DeleteObjectsCommand,
-  HeadObjectCommand,
-  ListObjectsV2Command,
-  S3Client,
-} from '@aws-sdk/client-s3';
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { HeadObjectCommand, ListObjectsV2Command } from '@aws-sdk/client-s3';
+import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import type { Page } from '@playwright/test';
 import { expect, test } from './fixtures';
-
-const endpoint = process.env.E2E_S3_ENDPOINT ?? 'http://localhost:8333';
-const identity = JSON.parse(
-  readFileSync(new URL('../../docker/seaweedfs-s3.json', import.meta.url), 'utf8'),
-) as { identities: { credentials: { accessKey: string; secretKey: string }[] }[] };
-const keys = identity.identities[0]?.credentials[0];
-const accessKeyId = process.env.E2E_S3_ACCESS_KEY_ID ?? keys?.accessKey ?? '';
-const secretAccessKey = process.env.E2E_S3_SECRET_ACCESS_KEY ?? keys?.secretKey ?? '';
+import {
+  addConnection,
+  admin,
+  createBucket,
+  openBucket,
+  openFolder,
+  removeBucket,
+  secretAccessKey,
+} from './s3-env';
 
 /** The extension APIs used inside `page.evaluate` (runs in the extension page). */
 declare const chrome: {
@@ -34,68 +27,35 @@ interface StorageArea {
 const bucket = `e2e-${Date.now()}`;
 const FILE_SIZE = 50 * 1024 * 1024; // multipart: 7 parts of 8 MiB
 
-const admin = new S3Client({
-  endpoint,
-  region: 'us-east-1',
-  forcePathStyle: true,
-  credentials: { accessKeyId, secretAccessKey },
-});
-
 test.beforeAll(async () => {
-  await admin.send(new CreateBucketCommand({ Bucket: bucket }));
+  await createBucket(bucket);
 });
 
 test.afterAll(async () => {
-  const { Contents = [] } = await admin.send(new ListObjectsV2Command({ Bucket: bucket }));
-  if (Contents.length) {
-    await admin.send(
-      new DeleteObjectsCommand({
-        Bucket: bucket,
-        Delete: { Objects: Contents.map((item) => ({ Key: item.Key })) },
-      }),
-    );
-  }
-  await admin.send(new DeleteBucketCommand({ Bucket: bucket }));
+  await removeBucket(bucket);
 });
 
-/** Adds a tested connection to the local server. */
-async function addConnection(page: Page) {
-  // Host access to localhost is pre-granted in the e2e build.
-  await page.getByTestId('profile-add').click();
-  await page.getByTestId('profile-name').locator('input').fill('Local S3');
-  await page.getByTestId('profile-endpoint').locator('input').fill(endpoint);
-  await page.getByTestId('profile-default-bucket').locator('input').fill(bucket);
-  await page.getByTestId('profile-access-key').locator('input').fill(accessKeyId);
-  await page.getByTestId('profile-secret-key').locator('input').fill(secretAccessKey);
-  await page.getByTestId('profile-test').click();
-  await expect(page.getByTestId('profile-test-result')).toBeVisible();
-  await page.getByTestId('profile-save').click();
-}
-
 test('full flow against a local S3 server', async ({ manager: page, pageErrors }) => {
-  const workDir = join(tmpdir(), `s3om-e2e-${Date.now()}`);
-  mkdirSync(join(workDir, 'upload'), { recursive: true });
+  const workDir = mkdtempSync(join(tmpdir(), 's3om-e2e-'));
+  mkdirSync(join(workDir, 'upload'));
   const bigFile = join(workDir, 'upload', 'big.bin');
   const content = Buffer.alloc(FILE_SIZE);
   for (let i = 0; i < FILE_SIZE; i += 4096) content[i] = i % 251;
   writeFileSync(bigFile, content);
 
-  await addConnection(page);
+  await addConnection(page, { name: 'Local S3', bucket });
 
   // Credentials are never stored in clear text.
   const stored = await page.evaluate(() => chrome.storage.local.get(null));
   expect(JSON.stringify(stored)).not.toContain(secretAccessKey);
 
-  // Open the bucket.
-  await page.getByTestId('profile-item-Local S3').click();
-  await page.getByTestId('bucket-list').getByText(bucket).click();
-  await expect(page.getByTestId('crumb-bucket')).toHaveText(bucket);
+  await openBucket(page, bucket);
 
   // Create a folder and open it.
   await page.getByTestId('new-folder').click();
   await page.getByTestId('new-folder-name').locator('input').fill('docs');
   await page.getByTestId('new-folder-create').click();
-  await page.getByTestId('entry-docs/').getByRole('button', { name: 'docs/' }).click();
+  await openFolder(page, 'docs/');
 
   // Upload 50 MB (multipart) into docs/.
   await page.getByTestId('file-input').setInputFiles(bigFile);
@@ -162,21 +122,19 @@ test('full flow against a local S3 server', async ({ manager: page, pageErrors }
 });
 
 test('uploads keep running after the upload panel is closed', async ({ manager: page }) => {
-  const dir = join(tmpdir(), `s3om-e2e-many-${Date.now()}`);
-  mkdirSync(dir, { recursive: true });
+  const dir = mkdtempSync(join(tmpdir(), 's3om-e2e-many-'));
   const files = Array.from({ length: 260 }, (_, i) => {
     const path = join(dir, `file-${String(i).padStart(3, '0')}.txt`);
     writeFileSync(path, `content ${i}\n`.repeat(50));
     return path;
   });
 
-  await addConnection(page);
-  await page.getByTestId('profile-item-Local S3').click();
-  await page.getByTestId('bucket-list').getByText(bucket).click();
+  await addConnection(page, { name: 'Local S3', bucket });
+  await openBucket(page, bucket);
   await page.getByTestId('new-folder').click();
   await page.getByTestId('new-folder-name').locator('input').fill('many');
   await page.getByTestId('new-folder-create').click();
-  await page.getByTestId('entry-many/').getByRole('button', { name: 'many/' }).click();
+  await openFolder(page, 'many/');
 
   await page.getByTestId('file-input').setInputFiles(files);
   await page.getByTestId('upload-queue-close').click();

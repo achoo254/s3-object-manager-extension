@@ -11,7 +11,7 @@ import {
   S3Client,
 } from '@aws-sdk/client-s3';
 import { chromium, expect, test, type Page } from '@playwright/test';
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -113,8 +113,7 @@ for (const lang of ['vi', 'en'] as const) {
     await page.waitForTimeout(4000); // let the "saved" snackbar disappear
     await shot('3-browser');
 
-    const uploadDir = join(tmpdir(), `s3om-shots-${lang}`);
-    mkdirSync(uploadDir, { recursive: true });
+    const uploadDir = mkdtempSync(join(tmpdir(), `s3om-shots-${lang}-`));
     const files = ['bien-ban-hop.pdf', 'du-toan-2027.xlsx'].map((name) => {
       const path = join(uploadDir, name);
       writeFileSync(path, Buffer.alloc(3 * MiB, 1));

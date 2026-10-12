@@ -9,6 +9,16 @@
         }
       ],
       "actions": ["Admin", "Read", "List", "Tagging", "Write"]
+    },
+    {
+      "name": "scoped-test",
+      "credentials": [
+        {
+          "accessKey": "scopedtestaccesskey",
+          "secretKey": "scoped-test-secret-not-a-real-secret"
+        }
+      ],
+      "actions": ["Read:e2e-scoped", "Write:e2e-scoped", "List:e2e-scoped"]
     }
   ]
 }
