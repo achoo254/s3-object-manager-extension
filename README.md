@@ -9,8 +9,7 @@ _English summary below._
 ## Cài đặt
 
 - **Chrome:** [Chrome Web Store](https://chromewebstore.google.com/detail/s3-object-manager/bbemiekmmjidgnnllkmmcnehbkpomlhp).
-- **Edge:** đang chờ Edge Add-ons duyệt. Trong lúc chờ, Edge cài được thẳng từ Chrome Web Store (bật
-  "Cho phép tiện ích từ các cửa hàng khác" khi Edge hỏi).
+- **Edge:** [Microsoft Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/s3-object-manager/opnkfhklilkdniijaljglkiflobdffgj).
 - Bản thử mới nhất: [GitHub Releases](https://github.com/achoo254/s3-object-manager-extension/releases).
   Bản này có ID khác bản store; chuyển sang bản store thì phải nhập lại kết nối.
 
@@ -109,8 +108,7 @@ just an endpoint and an access key pair. Connections are saved on your machine a
 with no password; credentials are only ever sent to the endpoint you configured; there is no backend, no telemetry and no
 account. Features: virtualised browsing of very large folders, resumable parallel multipart uploads,
 downloads through the browser's download manager, batch delete, rename/move/copy, presigned share
-links, and plain-language error messages in Vietnamese and English. Install from the [Chrome Web Store](https://chromewebstore.google.com/detail/s3-object-manager/bbemiekmmjidgnnllkmmcnehbkpomlhp) (Edge Add-ons listing
-pending review). See
+links, and plain-language error messages in Vietnamese and English. Install from the [Chrome Web Store](https://chromewebstore.google.com/detail/s3-object-manager/bbemiekmmjidgnnllkmmcnehbkpomlhp) or [Microsoft Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/s3-object-manager/opnkfhklilkdniijaljglkiflobdffgj). See
 [docs/compatibility.md](docs/compatibility.md) for tested providers and
 [docs/privacy.md](docs/privacy.md) for the privacy policy.
 

@@ -60,6 +60,6 @@ trình đóng gói lặp lại được từ tag git.
   `opnkfhklilkdniijaljglkiflobdffgj`, Store ID `0RDCKB85MPG9`. Ghi chú cho người duyệt dùng server demo công khai
   của MinIO (khoá do MinIO công bố), dự phòng chạy MinIO local.
 - Logo 300×300 bắt buộc cho Edge: `docs/store/edge-logo-300.png`.
-- Còn lại: chờ hai store duyệt; khi có link store, thêm vào README và đánh dấu phase xong.
 - Chrome Web Store: đã xuất bản bản 0.1.1, ID `bbemiekmmjidgnnllkmmcnehbkpomlhp`,
   https://chromewebstore.google.com/detail/s3-object-manager/bbemiekmmjidgnnllkmmcnehbkpomlhp. README đã có link.
+- Edge Add-ons: đã xuất bản bản 0.1.1 (12/10/2026), https://microsoftedge.microsoft.com/addons/detail/s3-object-manager/opnkfhklilkdniijaljglkiflobdffgj. README đã có link. **Phase 7 xong.**

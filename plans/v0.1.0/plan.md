@@ -13,7 +13,7 @@ created: 2026-10-08
 
 # MVP v0.1.0 — extension quản lý object S3
 
-Trạng thái: đang làm (mã phase 1–5 xong, phase 6 một phần, phase 7 đã nộp store, chờ duyệt) · Tạo 08/10/2026 · Tier tổng: **M** (~7 module)
+Trạng thái: đang làm (mã phase 1–5 xong, phase 6 một phần, phase 7 xong: đã lên Chrome Web Store và Edge Add-ons) · Tạo 08/10/2026 · Tier tổng: **M** (~7 module)
 
 Danh sách việc: milestone `v0.1.0`, issue theo dõi **#8**, mỗi phase một issue (#1–#7).
 
@@ -133,7 +133,7 @@ Phase 3 và 4 làm song song được (tệp tách biệt: `src/features/browser
 | 4 | Xong | Kiểm tay tắt mạng giữa chừng trong trình duyệt thật (logic tiếp tục đã có test tích hợp trên 3 server) |
 | 5 | Xong | — |
 | 6 | Gần xong | SeaweedFS, MinIO, Ceph RGW (path-style) đạt mọi ô; Backblaze B2 chờ tài khoản của chủ dự án; số đo qua mạng thật trên Ceph ở docs/performance.md |
-| 7 | Chuẩn bị xong | Tên **S3 Object Manager**; trang privacy trên GitHub Pages; còn tài khoản store + 2FA, tag `v0.1.0`, nộp hai store |
+| 7 | Xong 12/10/2026 | Đã xuất bản 0.1.1 trên Chrome Web Store và Edge Add-ons |
 
 ## Rủi ro chính
 
