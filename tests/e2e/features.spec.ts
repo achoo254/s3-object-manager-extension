@@ -1,7 +1,7 @@
 /**
  * Feature scenarios beyond the main flow: connections, browsing, uploads (pause, cancel,
- * resume after a reload, folders), copy/move, multi-select delete, properties, share links,
- * settings and error messages.
+ * resume after a reload or a lost network, folders), copy/move, multi-select delete,
+ * properties, share links, settings and error messages.
  */
 import {
   AbortMultipartUploadCommand,
@@ -78,6 +78,17 @@ async function setConcurrency(page: Page, value: number): Promise<void> {
 async function pendingUploads(key: string): Promise<number> {
   const listed = await admin.send(new ListMultipartUploadsCommand({ Bucket: bucket, Prefix: key }));
   return (listed.Uploads ?? []).filter((upload) => upload.Key === key).length;
+}
+
+/** Parts already stored for the unfinished multipart upload of `key` (0 if none). */
+async function partsOnServer(key: string): Promise<number> {
+  const listed = await admin.send(new ListMultipartUploadsCommand({ Bucket: bucket }));
+  const upload = (listed.Uploads ?? []).find((item) => item.Key === key);
+  if (!upload) return 0;
+  const parts = await admin.send(
+    new ListPartsCommand({ Bucket: bucket, Key: key, UploadId: upload.UploadId }),
+  );
+  return parts.Parts?.length ?? 0;
 }
 
 test.beforeAll(async () => {
@@ -337,20 +348,7 @@ test.describe('uploads', () => {
     await page.getByTestId('file-input').setInputFiles(file);
     await expect(page.getByTestId('upload-job-resume.bin')).toContainText(/MB|MiB/);
     // Wait until at least one part is on the server, then pull the plug.
-    await expect
-      .poll(
-        async () => {
-          const listed = await admin.send(new ListMultipartUploadsCommand({ Bucket: bucket }));
-          const upload = (listed.Uploads ?? []).find((item) => item.Key === 'resume.bin');
-          if (!upload) return 0;
-          const parts = await admin.send(
-            new ListPartsCommand({ Bucket: bucket, Key: 'resume.bin', UploadId: upload.UploadId }),
-          );
-          return parts.Parts?.length ?? 0;
-        },
-        { timeout: 60_000 },
-      )
-      .toBeGreaterThan(0);
+    await expect.poll(() => partsOnServer('resume.bin'), { timeout: 60_000 }).toBeGreaterThan(0);
     await page.reload();
     await context.unroute(/[?&]partNumber=/);
 
@@ -380,6 +378,42 @@ test.describe('uploads', () => {
     );
     await expect(page.getByTestId('upload-job-resume.bin')).toContainText(/resumed from \d+ part/);
     expect(await sha256Of('resume.bin')).toBe(sha256(readFileSync(file)));
+  });
+
+  test('an upload that loses the network fails clearly, then retry sends only the missing parts', async ({
+    context,
+    manager: page,
+  }) => {
+    const file = makeFile('offline.bin', 40 * MiB, 7);
+    await throttleParts(context, 700);
+    await addConnection(page, { name: 'Local S3', bucket });
+    await setConcurrency(page, 1);
+    await openBucket(page, bucket);
+    await page.getByTestId('file-input').setInputFiles(file);
+    await expect.poll(() => partsOnServer('offline.bin'), { timeout: 60_000 }).toBeGreaterThan(0);
+
+    // The tab stays open while the network is gone: retries run out and the job says why.
+    await context.setOffline(true);
+    const job = page.getByTestId('upload-job-offline.bin');
+    const status = page.getByTestId('upload-status-offline.bin');
+    await expect(status).toHaveAttribute('data-status', 'error', { timeout: 60_000 });
+    await expect(job).toContainText('Cannot reach the endpoint');
+
+    await context.setOffline(false);
+    await context.unroute(/[?&]partNumber=/);
+    const kept = await partsOnServer('offline.bin');
+    const sentParts: string[] = [];
+    context.on('request', (request) => {
+      const part = /[?&]partNumber=(\d+)/.exec(request.url());
+      if (part && request.method() === 'PUT') sentParts.push(part[1] ?? '');
+    });
+    await job.getByRole('button', { name: 'Retry' }).click();
+
+    await expect(status).toHaveAttribute('data-status', 'done', { timeout: 60_000 });
+    await expect(job).toContainText(`resumed from ${kept} part`);
+    expect(sentParts).toHaveLength(5 - kept);
+    expect(await sha256Of('offline.bin')).toBe(sha256(readFileSync(file)));
+    expect(await pendingUploads('offline.bin')).toBe(0);
   });
 
   test('unfinished uploads on the server can be listed and discarded', async ({
