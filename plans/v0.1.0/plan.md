@@ -1,7 +1,7 @@
 ---
 title: "Extension trình duyệt quản lý object trên mọi endpoint tương thích S3"
 description: "Extension Chrome/Edge (MV3) duyệt, upload, download, xoá, đổi tên và chia sẻ object trên bất kỳ endpoint S3 nào chỉ với endpoint + credentials, giao diện tiếng Việt là chính."
-status: in-progress
+status: completed
 priority: P2
 effort: M
 branch: main
@@ -13,7 +13,7 @@ created: 2026-10-08
 
 # MVP v0.1.0 — extension quản lý object S3
 
-Trạng thái: đang làm (mã phase 1–5 xong, phase 6 một phần, phase 7 xong: đã lên Chrome Web Store và Edge Add-ons) · Tạo 08/10/2026 · Tier tổng: **M** (~7 module)
+Trạng thái: xong 13/10/2026 (bản 0.1.2 trên Chrome Web Store và Edge Add-ons; Backblaze B2 bỏ khỏi tiêu chí, chuyển sang issue #24) · Tạo 08/10/2026 · Tier tổng: **M** (~7 module)
 
 Danh sách việc: milestone `v0.1.0`, issue theo dõi **#8**, mỗi phase một issue (#1–#7).
 
@@ -73,7 +73,8 @@ MVP — nếu muốn cạnh tranh tính năng sau MVP thì làm plan riêng.
 - **Non-goals:** IAM/policy/quota; đồng bộ thư mục; lifecycle/versioning/object lock; Firefox; tự động publish lên store.
 - **Acceptance criteria:**
   1. Cùng một bản build chạy trọn duyệt, upload multipart >1 GB (tiếp tục được sau khi bị dừng), download, xoá, đổi tên và
-     presign trên **SeaweedFS, Ceph RGW, Backblaze B2 và MinIO (image cuối cùng)** — ghi vào ma trận tương thích.
+     presign trên **SeaweedFS, Ceph RGW và MinIO (image cuối cùng)** — ghi vào ma trận tương thích. Backblaze B2 bỏ khỏi
+     tiêu chí (13/10/2026, chủ dự án quyết), theo dõi ở issue #24.
   2. Mọi lỗi S3 thường gặp (bảng ở phase 5) hiện câu tiếng Việt nêu việc cần làm.
   3. ~~Đóng trình duyệt rồi mở lại: credentials không đọc được nếu không nhập passphrase.~~ Thay bằng (09/10/2026):
      kết nối dùng được ngay sau khi lưu, và còn nguyên sau khi cập nhật bản thử (cùng ID extension).
@@ -123,17 +124,17 @@ Playwright**. Phiên bản chốt cứng lúc scaffold, chọn bản phát hành
 
 Phase 3 và 4 làm song song được (tệp tách biệt: `src/features/browser/**` vs `src/features/upload/**`).
 
-## Tiến độ (09/10/2026)
+## Tiến độ (13/10/2026)
 
 | # | Trạng thái | Còn lại |
 |---|---|---|
-| 1 | Xong | Cài hook trên máy (`scripts/install-git-hooks.sh`, cần biến `FORBIDDEN_TERMS_REGEX`) và đặt secret đó cho Dependabot. Cổng từ cấm đã tự chứng thực trên CI (bắt đúng một dòng vi phạm thật trong plan); secret scanning + push protection đã bật |
+| 1 | Xong | — Lượt chạy của Dependabot (không đọc được secret) nay được cho qua kèm ghi chú, `main` vẫn kiểm lại khi merge; không cài hook trên máy vì máy không giữ regex (13/10/2026, AI quyết theo uỷ quyền của chủ dự án). Cổng từ cấm đã tự chứng thực trên CI (bắt đúng một dòng vi phạm thật trong plan); secret scanning + push protection đã bật |
 | 2 | Xong (đổi hướng 09/10: bỏ passphrase) | — Hộp thoại cấp quyền thật đã dùng trên Edge với endpoint lab |
 | 3 | Xong | — |
-| 4 | Xong | Kiểm tay tắt mạng giữa chừng trong trình duyệt thật (logic tiếp tục đã có test tích hợp trên 3 server) |
+| 4 | Xong | Không chặn đóng plan, theo dõi ở issue #4: kiểm tay tắt mạng giữa chừng trong trình duyệt thật (logic tiếp tục đã có test tích hợp trên 3 server và e2e tiếp tục sau khi tải lại trang) |
 | 5 | Xong | — |
-| 6 | Gần xong | SeaweedFS, MinIO, Ceph RGW (path-style) đạt mọi ô; Backblaze B2 chờ tài khoản của chủ dự án; số đo qua mạng thật trên Ceph ở docs/performance.md |
-| 7 | Xong 12/10/2026 | Đã xuất bản 0.1.1 trên Chrome Web Store và Edge Add-ons |
+| 6 | Xong 13/10/2026 | SeaweedFS, MinIO, Ceph RGW (path-style) đạt mọi ô; Backblaze B2 bỏ khỏi tiêu chí MVP, chuyển sang issue #24; số đo qua mạng thật trên Ceph ở docs/performance.md |
+| 7 | Xong 12/10/2026 | Đã xuất bản 0.1.1, rồi 0.1.2, trên Chrome Web Store và Edge Add-ons |
 
 ## Rủi ro chính
 
@@ -177,3 +178,5 @@ Phase 3 và 4 làm song song được (tệp tách biệt: `src/features/browser
 | Backend/proxy | Không | Credentials ở lại máy người dùng; extension không bị CORS chặn |
 | Passphrase cho credentials (09/10/2026, chủ dự án quyết) | **Bỏ**: lưu xong dùng ngay | Người dùng mục tiêu là người phổ thông, ít kỹ thuật. Không có bí mật của người dùng thì mã hoá chỉ để che mắt; ghi rõ trong privacy |
 | Giữ kết nối khi cập nhật bản thử (09/10/2026) | ID extension cố định cho bản pre-release (khoá manifest chỉ thêm khi `PRERELEASE_BUILD=1`); vault passphrase cũ bị bỏ | Store tự cấp ID nên bản store không mang khoá |
+| Backblaze B2 trong tiêu chí MVP (13/10/2026, chủ dự án quyết) | **Bỏ**: đóng MVP với SeaweedFS, MinIO, Ceph RGW; B2 sang issue #24 | Ba nhà cung cấp đã đạt mọi ô và đã phát hành lên hai store; B2 chỉ còn chờ tài khoản. README không coi nhà cung cấp chưa kiểm là "hỗ trợ", nên đóng sớm không làm README nói quá |
+| Cổng từ cấm với PR Dependabot (13/10/2026, AI quyết theo uỷ quyền của chủ dự án) | Chỉ khi actor là `dependabot[bot]` **và** secret rỗng thì job ghi chú rồi cho qua; mọi lượt khác vẫn đỏ khi thiếu secret. Không cài hook trên máy | Regex không khôi phục được (secret chỉ ghi, máy không lưu) và chủ dự án không làm tay. PR Dependabot chỉ sửa tệp package; merge vào `main` chạy lại job với secret |

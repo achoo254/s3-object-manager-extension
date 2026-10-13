@@ -1,6 +1,6 @@
 # Phase 7 — Phát hành Chrome Web Store và Edge Add-ons
 
-Tier: **S** · Phụ thuộc: phase 6 · Trạng thái: đã chuẩn bị, chờ chủ dự án · Issue: #7
+Tier: **S** · Phụ thuộc: phase 6 · Trạng thái: xong 12/10/2026 · Issue: #7
 
 ## Mục tiêu
 
@@ -63,3 +63,7 @@ trình đóng gói lặp lại được từ tag git.
 - Chrome Web Store: đã xuất bản bản 0.1.1, ID `bbemiekmmjidgnnllkmmcnehbkpomlhp`,
   https://chromewebstore.google.com/detail/s3-object-manager/bbemiekmmjidgnnllkmmcnehbkpomlhp. README đã có link.
 - Edge Add-ons: đã xuất bản bản 0.1.1 (12/10/2026), https://microsoftedge.microsoft.com/addons/detail/s3-object-manager/opnkfhklilkdniijaljglkiflobdffgj. README đã có link. **Phase 7 xong.**
+
+## Cập nhật 13/10/2026
+
+- Bản 0.1.2 (sửa lỗi bucket mặc định với khoá chỉ được chia sẻ một bucket) đã lên cả Chrome Web Store và Edge Add-ons.

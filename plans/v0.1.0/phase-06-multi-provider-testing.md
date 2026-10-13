@@ -1,6 +1,6 @@
 # Phase 6 — Kiểm thử đa nhà cung cấp và đo performance
 
-Tier: **M** · Phụ thuộc: phase 3, 4, 5 · Trạng thái: gần xong (còn Backblaze B2) · Issue: #6
+Tier: **M** · Phụ thuộc: phase 3, 4, 5 · Trạng thái: xong (Backblaze B2 bỏ khỏi tiêu chí MVP, chuyển sang issue #24) · Issue: #6
 
 ## Mục tiêu
 
@@ -71,3 +71,7 @@ Ngưỡng không đạt ⟹ nêu nguyên nhân khả dĩ và đề xuất, khôn
 - Đo qua mạng thật trên Ceph: cả 5 ngưỡng đạt, thông lượng 104% `aws s3 cp` (docs/performance.md). Ngưỡng thông lượng coi là đạt; giữ mặc định 4 × 8 MiB.
 - Còn lại: Backblaze B2 (chờ tài khoản của chủ dự án).
 
+## Cập nhật 13/10/2026
+
+- Chủ dự án quyết định bỏ Backblaze B2 khỏi tiêu chí MVP. Phase đóng với ba nhà cung cấp đạt mọi ô: SeaweedFS, MinIO,
+  Ceph RGW (path-style). Cột B2 trong docs/compatibility.md vẫn ghi "chưa kiểm"; việc kiểm theo dõi ở issue #24.

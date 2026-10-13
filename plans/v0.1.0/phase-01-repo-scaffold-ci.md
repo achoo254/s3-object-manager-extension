@@ -1,6 +1,6 @@
 # Phase 1 — Khung repo, build, CI, SeaweedFS local
 
-Tier: **S** · Phụ thuộc: — · Trạng thái: xong mã; còn cấu hình GitHub · Issue: #1
+Tier: **S** · Phụ thuộc: — · Trạng thái: xong · Issue: #1
 
 ## Mục tiêu
 
@@ -81,3 +81,13 @@ SeaweedFS chạy bằng docker để phát triển, không cần kết nối t�
 ## Rủi ro
 
 - WXT đổi API giữa các bản lớn ⟹ chốt cứng phiên bản, đọc tài liệu đúng bản đã chốt.
+
+## Cập nhật 13/10/2026
+
+- Đã xong: secret scanning + push protection bật; secret `FORBIDDEN_TERMS_REGEX` có trong Actions; cổng từ cấm tự chứng
+  thực trên CI (bắt đúng một dòng vi phạm thật).
+- PR Dependabot từng đỏ vì GitHub không cho lượt chạy của Dependabot đọc secret (PR #19, #23 phải chạy lại bằng tài
+  khoản chủ dự án). Regex không khôi phục được, nên thay vì đặt secret cho Dependabot, job nay cho qua kèm ghi chú khi
+  actor là `dependabot[bot]` và secret rỗng; mọi lượt khác vẫn đỏ. Merge vào `main` chạy lại job với secret.
+- Không cài hook trên máy: máy không giữ regex, cài vào sẽ chặn mọi commit. CI là cổng duy nhất.
+- Hai quyết định trên do AI đưa ra theo uỷ quyền của chủ dự án (13/10/2026).
