@@ -19,11 +19,25 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
+      - name: Skip Dependabot runs, which cannot read the secret
+        id: gate
+        env:
+          FORBIDDEN_TERMS_REGEX: ${{ secrets.FORBIDDEN_TERMS_REGEX }}
+          ACTOR: ${{ github.actor }}
+        run: |
+          # Dependabot PRs only touch package manifests, and merging one into main re-runs this job with
+          # the secret, so pass with a notice. Any other run without the secret still fails below.
+          if [ -z "${FORBIDDEN_TERMS_REGEX//[[:space:]]/}" ] && [ "$ACTOR" = "dependabot[bot]" ]; then
+            echo "::notice::Forbidden-terms check skipped: Dependabot runs cannot read the secret; main is checked after merge."
+            echo "skip=true" >>"$GITHUB_OUTPUT"
+          fi
       - name: Check tracked files and paths
+        if: steps.gate.outputs.skip != 'true'
         env:
           FORBIDDEN_TERMS_REGEX: ${{ secrets.FORBIDDEN_TERMS_REGEX }}
         run: scripts/check-forbidden-terms.sh files
       - name: Check commit messages of this push / pull request
+        if: steps.gate.outputs.skip != 'true'
         env:
           FORBIDDEN_TERMS_REGEX: ${{ secrets.FORBIDDEN_TERMS_REGEX }}
           EVENT: ${{ github.event_name }}

@@ -84,6 +84,8 @@ diện nằm ở `src/i18n/{vi,en}.json`.
 Repo chỉ nói về chính extension. Danh sách từ cấm là một regex giữ **ngoài repo**:
 
 - CI: secret `FORBIDDEN_TERMS_REGEX` của repository. Thiếu hoặc rỗng ⟹ job `forbidden terms` đỏ.
+  Ngoại lệ duy nhất là lượt chạy của Dependabot (GitHub không cho nó đọc secret): job ghi chú rồi cho
+  qua, vì PR đó chỉ sửa tệp package và khi merge vào `main` job chạy lại với secret.
 - Máy local: đặt biến môi trường `FORBIDDEN_TERMS_REGEX`, rồi chạy `scripts/install-git-hooks.sh`
   để cài hook `pre-commit` và `commit-msg`.
 
