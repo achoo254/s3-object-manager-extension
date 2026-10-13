@@ -53,3 +53,9 @@ tiếp tục được sau khi mất mạng, đóng tab hoặc khởi động l�
 - Một số nhà cung cấp tính ETag multipart khác nhau ⟹ chỉ dùng ETag trả về từ chính server, không tự tính để so.
 - Người dùng chọn file khác cùng tên cùng cỡ ⟹ vân tay còn có `lastModified`; vẫn trùng thì `ListParts` vẫn cho tiếp tục
   sai nội dung. Chấp nhận rủi ro này ở MVP, ghi trong README.
+
+## Cập nhật 13/10/2026
+
+- Bước kiểm tay "tắt mạng giữa chừng" được thay bằng e2e trong `tests/e2e/features.spec.ts`: `context.setOffline` khi đã có
+  part trên server ⟹ hết lượt thử lại, job ở trạng thái lỗi với câu "Cannot reach the endpoint"; bật mạng, bấm "Retry"
+  ⟹ chỉ gửi đúng số part còn thiếu, nội dung khớp từng byte, không còn upload dở. Đạt trên MinIO bản cuối (4/4 lượt).

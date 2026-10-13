@@ -131,7 +131,7 @@ Phase 3 và 4 làm song song được (tệp tách biệt: `src/features/browser
 | 1 | Xong | — Lượt chạy của Dependabot (không đọc được secret) nay được cho qua kèm ghi chú, `main` vẫn kiểm lại khi merge; không cài hook trên máy vì máy không giữ regex (13/10/2026, AI quyết theo uỷ quyền của chủ dự án). Cổng từ cấm đã tự chứng thực trên CI (bắt đúng một dòng vi phạm thật trong plan); secret scanning + push protection đã bật |
 | 2 | Xong (đổi hướng 09/10: bỏ passphrase) | — Hộp thoại cấp quyền thật đã dùng trên Edge với endpoint lab |
 | 3 | Xong | — |
-| 4 | Xong | Không chặn đóng plan, theo dõi ở issue #4: kiểm tay tắt mạng giữa chừng trong trình duyệt thật (logic tiếp tục đã có test tích hợp trên 3 server và e2e tiếp tục sau khi tải lại trang) |
+| 4 | Xong | — Mất mạng giữa chừng (tab vẫn mở) nay có e2e: job báo lỗi rõ, bấm "Thử lại" chỉ gửi part còn thiếu (13/10/2026) |
 | 5 | Xong | — |
 | 6 | Xong 13/10/2026 | SeaweedFS, MinIO, Ceph RGW (path-style) đạt mọi ô; Backblaze B2 bỏ khỏi tiêu chí MVP, chuyển sang issue #24; số đo qua mạng thật trên Ceph ở docs/performance.md |
 | 7 | Xong 12/10/2026 | Đã xuất bản 0.1.1, rồi 0.1.2, trên Chrome Web Store và Edge Add-ons |
